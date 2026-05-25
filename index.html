@@ -11,54 +11,27 @@
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icon-192.svg"/>
 <style>
-:root {
-  --bg: #0f0f1a;
-  --bg2: #1a1a2e;
-  --bg3: #16213e;
-  --card: #1e1e35;
-  --card2: #252542;
-  --border: rgba(255,255,255,0.08);
-  --border2: rgba(255,255,255,0.15);
-  --text: #f0f0ff;
-  --text2: #9090b0;
-  --text3: #6060808;
-  --accent: #7c6aff;
-  --accent2: #a594ff;
-  --pink: #ff6b9d;
-  --teal: #36d4b0;
-  --amber: #ffb547;
-  --red: #ff6b6b;
-  --green: #4ecdc4;
-  --radius: 14px;
-  --radius-sm: 8px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bot: env(safe-area-inset-bottom, 0px);
+:root{
+  --bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#16213e;
+  --card:#1e1e35;--card2:#252542;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
+  --text:#f0f0ff;--text2:#9090b0;
+  --accent:#7c6aff;--accent2:#a594ff;
+  --pink:#ff6b9d;--teal:#36d4b0;--amber:#ffb547;--red:#ff6b6b;--green:#4ecdc4;
+  --radius:14px;--radius-sm:8px;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{height:100%;background:var(--bg)}
 body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display',sans-serif;display:flex;flex-direction:column;overflow:hidden}
 
-/* Top bar */
-.topbar{
-  background:var(--bg2);
-  padding:calc(var(--safe-top) + 12px) 16px 12px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
-  position:sticky;top:0;z-index:50;
-}
+.topbar{background:var(--bg2);padding:calc(var(--safe-top) + 12px) 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .topbar-title{font-size:17px;font-weight:600;color:var(--text)}
 .topbar-sub{font-size:12px;color:var(--text2);margin-top:1px}
-.topbar-right{display:flex;gap:8px}
-.icon-btn{width:36px;height:36px;border:1px solid var(--border2);border-radius:10px;background:none;color:var(--text2);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s}
+.icon-btn{width:36px;height:36px;border:1px solid var(--border2);border-radius:10px;background:none;color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer}
 .icon-btn:active{transform:scale(0.9);background:var(--card2)}
 
-/* Stats row */
-.stats-row{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
-  padding:12px 14px;background:var(--bg2);border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 14px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
 .stat{text-align:center}
 .stat-val{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px}
 .stat-val.accent{color:var(--accent2)}
@@ -66,32 +39,22 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .progress-mini{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:4px;overflow:hidden}
 .progress-mini-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--accent));border-radius:2px;transition:width 0.4s}
 
-/* Bottom nav */
-.bottomnav{
-  background:var(--bg2);
-  border-top:1px solid var(--border);
-  display:flex;
-  padding:8px 0 calc(var(--safe-bot) + 8px);
-  flex-shrink:0;
-}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;transition:all 0.15s;border:none;background:none;color:var(--text2)}
+.bottomnav{background:var(--bg2);border-top:1px solid var(--border);display:flex;padding:8px 0 calc(var(--safe-bot) + 8px);flex-shrink:0}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;border:none;background:none;color:var(--text2)}
 .nav-item.active{color:var(--accent2)}
 .nav-item svg{width:22px;height:22px;stroke-width:1.8}
 .nav-item span{font-size:10px;font-weight:500}
 
-/* Scroll content */
 .content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px;padding-bottom:30px}
 .panel{display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden}
 .panel.active{display:flex}
 
-/* Filter chips */
 .filter-scroll{display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none;flex-shrink:0}
 .filter-scroll::-webkit-scrollbar{display:none}
-.chip{padding:6px 14px;border-radius:20px;font-size:13px;white-space:nowrap;cursor:pointer;border:1px solid var(--border2);background:none;color:var(--text2);transition:all 0.15s;flex-shrink:0}
+.chip{padding:6px 14px;border-radius:20px;font-size:13px;white-space:nowrap;cursor:pointer;border:1px solid var(--border2);background:none;color:var(--text2);flex-shrink:0}
 .chip.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:500}
 .chip:active{transform:scale(0.95)}
 
-/* Day group */
 .day-group{margin-bottom:16px}
 .day-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .day-date{font-size:13px;font-weight:600;color:var(--text2)}
@@ -106,12 +69,7 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .loc-asakusa{background:rgba(100,200,255,0.2);color:#80d4ff}
 .loc-other{background:rgba(255,255,255,0.1);color:var(--text2)}
 
-/* Entry card */
-.entry-card{
-  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
-  padding:12px;margin-bottom:8px;transition:all 0.2s;
-  position:relative;overflow:hidden;
-}
+.entry-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;position:relative;overflow:hidden}
 .entry-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
 .entry-card.color-sapporo::before{background:var(--accent)}
 .entry-card.color-otaru::before{background:var(--teal)}
@@ -124,10 +82,10 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .entry-card.color-other::before{background:var(--text2)}
 .entry-card:active{transform:scale(0.99)}
 .entry-top{display:flex;align-items:flex-start;gap:10px}
-.entry-time{font-size:11px;color:var(--text2);min-width:72px;padding-top:2px;font-variant-numeric:tabular-nums;flex-shrink:0}
+.entry-time{font-size:11px;color:var(--text2);min-width:72px;padding-top:2px;flex-shrink:0}
 .entry-activity{font-size:14px;font-weight:600;color:var(--text);flex:1;line-height:1.35}
 .entry-actions{display:flex;gap:4px;flex-shrink:0}
-.mini-btn{width:28px;height:28px;border:none;background:none;cursor:pointer;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;transition:all 0.15s}
+.mini-btn{width:28px;height:28px;border:none;background:none;cursor:pointer;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px}
 .mini-btn:active{background:var(--card2)}
 .mini-btn.del:active{color:var(--red)}
 .entry-meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;margin-left:82px}
@@ -137,7 +95,6 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .meta-tag.free{background:rgba(54,212,176,0.15);color:var(--teal)}
 .meta-tag.note{background:rgba(255,181,71,0.12);color:var(--amber)}
 
-/* Edit form */
 .edit-form{background:var(--card2);border:1px solid var(--accent);border-radius:var(--radius);padding:14px;margin-bottom:8px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
 .form-full{margin-bottom:8px}
@@ -145,79 +102,96 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .form-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;outline:none}
 .form-input:focus{border-color:var(--accent)}
 .form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
-.btn{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:none;color:var(--text2);transition:all 0.15s}
+.btn{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:none;color:var(--text2)}
 .btn:active{transform:scale(0.97)}
 .btn-accent{background:var(--accent);border-color:var(--accent);color:white}
-.btn-accent:active{background:var(--accent2)}
+.btn-sm{padding:5px 12px;font-size:12px}
 
-/* Add button */
-.add-fab{
-  position:fixed;right:18px;bottom:calc(var(--safe-bot) + 80px);
-  width:52px;height:52px;border-radius:16px;
-  background:var(--accent);border:none;color:white;font-size:26px;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  box-shadow:0 4px 20px rgba(124,106,255,0.4);
-  transition:all 0.2s;z-index:40;
-}
+.add-fab{position:fixed;right:18px;bottom:calc(var(--safe-bot) + 80px);width:52px;height:52px;border-radius:16px;background:var(--accent);border:none;color:white;font-size:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(124,106,255,0.4);z-index:40}
 .add-fab:active{transform:scale(0.92)}
 
-/* Checklist */
 .check-grid{display:flex;flex-direction:column;gap:6px}
-.check-item{
-  display:flex;align-items:center;gap:12px;padding:12px 14px;
-  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.15s;
-}
+.check-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer}
 .check-item.done{background:rgba(54,212,176,0.08);border-color:rgba(54,212,176,0.25)}
 .check-item.done .check-label{text-decoration:line-through;color:var(--text2)}
-.check-box{width:22px;height:22px;border:2px solid var(--border2);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-size:13px}
+.check-box{width:22px;height:22px;border:2px solid var(--border2);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
 .check-item.done .check-box{background:var(--teal);border-color:var(--teal);color:#0a2a25}
 .check-label{font-size:14px;color:var(--text);flex:1}
-.check-del{font-size:16px;color:var(--text2);opacity:0;transition:opacity 0.15s;background:none;border:none;cursor:pointer;padding:4px}
-.check-item:hover .check-del{opacity:1}
+.check-del{font-size:16px;color:var(--text2);background:none;border:none;cursor:pointer;padding:4px}
 .add-item-row{display:flex;gap:8px;margin-top:12px}
 .add-item-row .form-input{flex:1}
 
-/* Section title */
 .section-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.section-title svg{width:18px;height:18px;color:var(--accent2)}
 
-/* Links */
+/* Hotel */
+.hotel-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.hotel-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.hotel-emoji{font-size:28px;flex-shrink:0;line-height:1}
+.hotel-info{flex:1;min-width:0}
+.hotel-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:2px}
+.hotel-loc{font-size:12px;color:var(--text2);margin-bottom:6px}
+.hotel-dates{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.hotel-date-tag{font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(124,106,255,0.15);color:var(--accent2)}
+.hotel-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.hotel-tag{font-size:11px;padding:3px 9px;border-radius:20px}
+.hotel-tag.cost{background:rgba(54,212,176,0.15);color:var(--teal)}
+.hotel-tag.note{background:rgba(255,181,71,0.12);color:var(--amber)}
+.hotel-tag.confirmed{background:rgba(54,212,176,0.2);color:var(--teal)}
+.hotel-tag.pending{background:rgba(255,181,71,0.2);color:var(--amber)}
+.hotel-link{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:var(--accent2);text-decoration:none}
+.hotel-actions{display:flex;gap:4px;flex-shrink:0}
+
+/* Links panel */
 .link-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px}
-.link-section h3{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.link-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.link-section-title{font-size:13px;font-weight:600;color:var(--text2)}
 .link-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
 .link-row:last-child{border-bottom:none;padding-bottom:0}
 .link-icon{width:32px;height:32px;border-radius:8px;background:rgba(124,106,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
 .link-text{flex:1;min-width:0}
 .link-name{font-size:13px;font-weight:500;color:var(--text)}
 .link-url{font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.link-arrow{color:var(--text2);font-size:18px;flex-shrink:0}
-.note-area{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px;color:var(--text);font-size:13px;line-height:1.6;resize:vertical;min-height:100px;outline:none}
-.note-area:focus{border-color:var(--accent)}
+.link-edit-btn{font-size:14px;color:var(--text2);background:none;border:none;cursor:pointer;padding:4px 6px}
+.link-edit-row{background:var(--card2);border:1px solid var(--accent);border-radius:10px;padding:10px;margin:4px 0}
+
+/* Notes */
+.note-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px}
+.note-num{font-size:11px;color:var(--accent2);font-weight:600;margin-bottom:4px}
+.note-text{font-size:14px;color:var(--text);line-height:1.5}
+.note-actions{display:flex;gap:6px;margin-top:8px;justify-content:flex-end}
+.note-edit-form{background:var(--card2);border:1px solid var(--accent);border-radius:var(--radius-sm);padding:10px;margin-bottom:8px}
+.note-edit-form textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px;color:var(--text);font-size:13px;line-height:1.5;resize:vertical;min-height:70px;outline:none}
+.note-edit-form textarea:focus{border-color:var(--accent)}
 
 /* Budget */
-.budget-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-.budget-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
-.budget-row:last-child{border-bottom:none}
-.budget-loc{font-size:14px;color:var(--text)}
-.budget-amt{font-size:14px;font-weight:600;color:var(--teal)}
 .budget-total{background:linear-gradient(135deg,rgba(124,106,255,0.15),rgba(54,212,176,0.1));border:1px solid rgba(124,106,255,0.3);border-radius:var(--radius);padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .budget-total-label{font-size:13px;color:var(--text2)}
 .budget-total-val{font-size:24px;font-weight:700;color:var(--accent2)}
-.budget-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;margin-top:6px;overflow:hidden}
-.budget-bar-fill{height:100%;border-radius:3px;transition:width 0.6s}
+.budget-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.budget-card-title{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.budget-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.budget-row:last-child{border-bottom:none}
+.budget-loc{font-size:13px;color:var(--text)}
+.budget-amt{font-size:13px;font-weight:600;color:var(--teal)}
+.budget-bar{height:5px;background:rgba(255,255,255,0.08);border-radius:3px;margin-top:5px;overflow:hidden}
+.budget-bar-fill{height:100%;border-radius:3px}
+.budget-cat-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.budget-cat-row:last-child{border-bottom:none}
+.budget-cat-label{font-size:13px;color:var(--text);flex:1}
+.budget-cat-input{width:100px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:5px 8px;color:var(--text);font-size:13px;text-align:right;outline:none}
+.budget-cat-input:focus{border-color:var(--accent)}
+.budget-summary-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.budget-summary-row:last-child{border-bottom:none}
+.budget-summary-row.grand{font-weight:700;color:var(--accent2);font-size:15px;border-top:1px solid var(--border2);margin-top:4px;padding-top:12px}
+.budget-label-muted{color:var(--text2)}
 
-/* Empty state */
 .empty{text-align:center;padding:40px 20px;color:var(--text2)}
 .empty svg{width:48px;height:48px;margin-bottom:12px;opacity:0.3}
-.empty p{font-size:14px}
 
-/* Toast */
 .toast{position:fixed;bottom:calc(var(--safe-bot) + 90px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:10px 20px;font-size:13px;color:var(--text);opacity:0;transition:all 0.3s;z-index:100;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* Scrollbar */
 ::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 </style>
 </head>
@@ -228,26 +202,17 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <div class="topbar-title">🗾 日本旅行计划</div>
     <div class="topbar-sub">北海道10天 · 东京5天 · 2026.11</div>
   </div>
-  <div class="topbar-right">
+  <div style="display:flex;gap:8px">
     <button class="icon-btn" onclick="exportCSV()" title="导出CSV">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     </button>
   </div>
 </div>
 
 <div class="stats-row">
-  <div class="stat">
-    <div class="stat-val">15</div>
-    <div class="stat-label">总天数</div>
-  </div>
-  <div class="stat">
-    <div class="stat-val accent" id="stat-items">50</div>
-    <div class="stat-label">行程项目</div>
-  </div>
-  <div class="stat">
-    <div class="stat-val" id="stat-cost">RM 0</div>
-    <div class="stat-label">门票小计</div>
-  </div>
+  <div class="stat"><div class="stat-val">15</div><div class="stat-label">总天数</div></div>
+  <div class="stat"><div class="stat-val accent" id="stat-items">50</div><div class="stat-label">行程项目</div></div>
+  <div class="stat"><div class="stat-val" id="stat-cost">¥0</div><div class="stat-label">门票小计</div></div>
   <div class="stat">
     <div class="stat-val" id="stat-check">0%</div>
     <div class="stat-label">行李</div>
@@ -265,13 +230,13 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 <div id="panel-checklist" class="panel" style="display:none">
   <div class="content">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div class="section-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      <div class="section-title" style="margin-bottom:0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
         行李清单
       </div>
       <div style="display:flex;gap:6px">
-        <button class="btn" onclick="checkAll()" style="padding:6px 12px;font-size:12px">全选</button>
-        <button class="btn" onclick="uncheckAll()" style="padding:6px 12px;font-size:12px">清空</button>
+        <button class="btn btn-sm" onclick="checkAll()">全选</button>
+        <button class="btn btn-sm" onclick="uncheckAll()">清空</button>
       </div>
     </div>
     <div class="check-grid" id="check-grid"></div>
@@ -282,92 +247,38 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
   </div>
 </div>
 
+<!-- Panel: Hotel -->
+<div id="panel-hotel" class="panel" style="display:none">
+  <div class="content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="section-title" style="margin-bottom:0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        住宿
+      </div>
+      <button class="btn btn-accent btn-sm" onclick="addHotel()">+ 添加</button>
+    </div>
+    <div id="hotel-list"></div>
+  </div>
+</div>
+
 <!-- Panel: Links -->
 <div id="panel-links" class="panel" style="display:none">
-  <div class="content">
-    <div class="section-title" style="margin-bottom:12px">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-      参考链接
-    </div>
-    <div class="link-section">
-      <h3>🚄 JR Pass</h3>
-      <a href="https://www.xiaohongshu.com/discovery/item/699ab783000000000d00a661" target="_blank" class="link-row" style="text-decoration:none">
-        <div class="link-icon">📖</div>
-        <div class="link-text"><div class="link-name">北海道JR Pass 攻略</div><div class="link-url">小红书 · 购买 & 使用全攻略</div></div>
-        <div class="link-arrow">›</div>
-      </a>
-      <a href="http://xhslink.com/o/6ClTjfchFA5" target="_blank" class="link-row" style="text-decoration:none">
-        <div class="link-icon">🎫</div>
-        <div class="link-text"><div class="link-name">JR东日本在线预订</div><div class="link-url">周游券内容确认画面</div></div>
-        <div class="link-arrow">›</div>
-      </a>
-    </div>
-    <div class="link-section">
-      <h3>🏨 住宿</h3>
-      <a href="https://zh.airbnb.com/rooms/1590956368963992612" target="_blank" class="link-row" style="text-decoration:none">
-        <div class="link-icon">🏠</div>
-        <div class="link-text"><div class="link-name">Airbnb 札幌</div><div class="link-url">北海道主住处</div></div>
-        <div class="link-arrow">›</div>
-      </a>
-      <a href="https://www.trip.com/w/F1OqMTvMiU2" target="_blank" class="link-row" style="text-decoration:none">
-        <div class="link-icon">♨️</div>
-        <div class="link-text"><div class="link-name">第一泷本馆</div><div class="link-url">登别温泉旅馆</div></div>
-        <div class="link-arrow">›</div>
-      </a>
-      <a href="https://www.trip.com/w/TjoeYaKMiU2" target="_blank" class="link-row" style="text-decoration:none">
-        <div class="link-icon">🏯</div>
-        <div class="link-text"><div class="link-name">函館JR旅馆</div><div class="link-url">函馆住宿</div></div>
-        <div class="link-arrow">›</div>
-      </a>
-      <a href="https://www.trip.com/w/ELa4awAMiU2" target="_blank" class="link-row" style="text-decoration:none">
-        <div class="link-icon">🏢</div>
-        <div class="link-text"><div class="link-name">京王廣場大飯店</div><div class="link-url">札幌返程住宿</div></div>
-        <div class="link-arrow">›</div>
-      </a>
-      <a href="https://www.airbnb.cn/rooms/50777770?check_in=2026-11-30&check_out=2026-12-05" target="_blank" class="link-row" style="text-decoration:none">
-        <div class="link-icon">🗼</div>
-        <div class="link-text"><div class="link-name">Airbnb 东京</div><div class="link-url">11/30 - 12/5</div></div>
-        <div class="link-arrow">›</div>
-      </a>
-    </div>
-    <div class="link-section">
-      <h3>📝 备注</h3>
-      <textarea class="note-area" id="custom-note" placeholder="添加旅行备注...">务必提前预约吉卜力美术馆门票（每月10号开放下月预约）
-登别温泉建议穿浴衣在温泉街散步
-函馆山夜景看天气决定，可能需备选方案
-Shibuya Sky 提前在官网预约夜景门票</textarea>
-    </div>
+  <div class="content" id="links-content">
+    <!-- rendered by JS -->
   </div>
 </div>
 
 <!-- Panel: Budget -->
 <div id="panel-budget" class="panel" style="display:none">
-  <div class="content">
-    <div class="section-title" style="margin-bottom:12px">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      费用估算
-    </div>
-    <div class="budget-total">
-      <div><div class="budget-total-label">门票 & 车票合计</div><div style="font-size:11px;color:var(--text2);margin-top:2px">行程中标注费用</div></div>
-      <div class="budget-total-val" id="budget-total">RM 0</div>
-    </div>
-    <div class="budget-card" id="budget-by-loc"></div>
-    <div class="budget-card">
-      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">其他费用参考</div>
-      <div class="budget-row"><span class="budget-loc">北海道JR Pass (7天)</span><span class="budget-amt">~RM 30,000</span></div>
-      <div class="budget-row"><span class="budget-loc">东京交通 IC 卡</span><span class="budget-amt">~RM 5,000</span></div>
-      <div class="budget-row"><span class="budget-loc">餐饮 (15天)</span><span class="budget-amt">~RM 60,000</span></div>
-      <div class="budget-row"><span class="budget-loc">购物预算</span><span style="font-size:13px;color:var(--text2)">按需</span></div>
-    </div>
+  <div class="content" id="budget-content">
+    <!-- rendered by JS -->
   </div>
 </div>
 
-<!-- FAB add button (itinerary only) -->
 <button class="add-fab" id="add-fab" onclick="addEntry()">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
 </button>
 
-<!-- Bottom nav -->
 <nav class="bottomnav">
   <button class="nav-item active" onclick="switchTab('itinerary')" id="nav-itinerary">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -376,6 +287,10 @@ Shibuya Sky 提前在官网预约夜景门票</textarea>
   <button class="nav-item" onclick="switchTab('checklist')" id="nav-checklist">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
     <span>行李</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('hotel')" id="nav-hotel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>住宿</span>
   </button>
   <button class="nav-item" onclick="switchTab('links')" id="nav-links">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
@@ -390,11 +305,16 @@ Shibuya Sky 提前在官网预约夜景门票</textarea>
 <div class="toast" id="toast"></div>
 
 <script>
-const DEFAULT_ENTRIES = [
+// ── Storage ──
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function load(k,d){try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d}catch(e){return d}}
+
+// ── Default Data ──
+const DEFAULT_ENTRIES=[
   {id:1,date:"2026-11-21",loc:"札幌",time:"19:35-20:30",act:"抵达新千岁机场 (CTS)",transport:"ANA国内线",cost:"",note:"抵达日，不建议安排景点"},
   {id:2,date:"2026-11-21",loc:"札幌",time:"20:30-21:30",act:"JR 前往札幌站",transport:"JR Rapid Airport",cost:"",note:"约37分钟"},
   {id:3,date:"2026-11-21",loc:"札幌",time:"21:30-23:00",act:"Airbnb 入住 + 晚餐",transport:"地铁+步行",cost:"",note:"拉面或便利店补给"},
-  {id:4,date:"2026-11-22",loc:"札幌",time:"09:00-10:00",act:"大通公园",transport:"地铁+步行",cost:"免费",note:"附近轻松"},
+  {id:4,date:"2026-11-22",loc:"札幌",time:"09:00-10:00",act:"大通公园",transport:"地铁+步行",cost:"免费",note:""},
   {id:5,date:"2026-11-22",loc:"札幌",time:"10:00-11:00",act:"札幌电视塔",transport:"步行",cost:"1000",note:""},
   {id:6,date:"2026-11-22",loc:"札幌",time:"11:00-13:00",act:"二条市场午餐",transport:"步行",cost:"",note:"推荐海鲜丼"},
   {id:7,date:"2026-11-22",loc:"札幌",time:"14:00-17:00",act:"狸小路 + PARCO + Daimaru",transport:"步行",cost:"",note:"购物时间"},
@@ -443,83 +363,103 @@ const DEFAULT_ENTRIES = [
   {id:50,date:"2026-12-04",loc:"东京",time:"13:00-15:30",act:"表参道购物",transport:"步行",cost:"",note:"最后采购伴手礼"},
 ];
 
-const DEFAULT_CHECKS = ["发热衣","衣服","裤子","底裤","安全裤","内衣","外套","Pad","毛巾","牙刷 牙膏","Charger","Sim card","Shampoo","转换头","脏衣服袋子","化妆品","口红","眼药水","绑头发","Passport","钱 卡","药(Panadol)/Fibre","iPad","Airpods","Boarding pass","鞋子","袜子（长袜或短袜）","香水","双眼皮贴","假睫毛","Powerbank","隐形眼镜/墨镜","眼镜布","Wet tissue","梳子","洗脸巾","洗脸水","洗衣液","Apple Watch & charger","首饰","润唇膏"];
+const DEFAULT_CHECKS=["发热衣","衣服","裤子","底裤","安全裤","内衣","外套","Pad","毛巾","牙刷 牙膏","Charger","Sim card","Shampoo","转换头","脏衣服袋子","化妆品","口红","眼药水","绑头发","Passport","钱 卡","药(Panadol)/Fibre","iPad","Airpods","Boarding pass","鞋子","袜子（长袜或短袜）","香水","双眼皮贴","假睫毛","Powerbank","隐形眼镜/墨镜","眼镜布","Wet tissue","梳子","洗脸巾","洗脸水","洗衣液","Apple Watch & charger","首饰","润唇膏"];
 
-const LOC_COLOR = {
-  "札幌":"sapporo","小樽":"otaru","旭川":"asahikawa","登别":"noboribetsu",
-  "洞爷湖":"toyako","函馆":"hakodate","东京":"tokyo","浅草":"asakusa"
+const DEFAULT_HOTELS=[
+  {id:1,name:"Airbnb 札幌",loc:"札幌",emoji:"🏠",checkin:"2026-11-21",checkout:"2026-11-26",cost:"",status:"confirmed",note:"北海道主住处",url:"https://zh.airbnb.com/rooms/1590956368963992612"},
+  {id:2,name:"第一泷本馆",loc:"登别",emoji:"♨️",checkin:"2026-11-26",checkout:"2026-11-27",cost:"",status:"confirmed",note:"温泉旅馆，含晚餐",url:"https://www.trip.com/w/F1OqMTvMiU2"},
+  {id:3,name:"洞爷湖住宿",loc:"洞爷湖",emoji:"🌊",checkin:"2026-11-27",checkout:"2026-11-28",cost:"",status:"pending",note:"待确认",url:""},
+  {id:4,name:"函館JR旅馆",loc:"函馆",emoji:"🏯",checkin:"2026-11-28",checkout:"2026-11-29",cost:"",status:"confirmed",note:"",url:"https://www.trip.com/w/TjoeYaKMiU2"},
+  {id:5,name:"京王廣場大飯店",loc:"札幌",emoji:"🏢",checkin:"2026-11-29",checkout:"2026-11-30",cost:"",status:"confirmed",note:"返程一晚",url:"https://www.trip.com/w/ELa4awAMiU2"},
+  {id:6,name:"Airbnb 东京",loc:"东京",emoji:"🗼",checkin:"2026-11-30",checkout:"2026-12-05",cost:"",status:"confirmed",note:"龟泽民宿",url:"https://www.airbnb.cn/rooms/50777770"},
+];
+
+const DEFAULT_LINKS=[
+  {id:1,category:"🚄 JR Pass",icon:"📖",name:"北海道JR Pass 攻略",desc:"小红书 · 购买 & 使用全攻略",url:"https://www.xiaohongshu.com/discovery/item/699ab783000000000d00a661"},
+  {id:2,category:"🚄 JR Pass",icon:"🎫",name:"JR东日本在线预订",desc:"周游券内容确认画面",url:"http://xhslink.com/o/6ClTjfchFA5"},
+];
+
+const DEFAULT_NOTES=[
+  {id:1,text:"务必提前预约吉卜力美术馆门票（每月10号开放下月预约）"},
+  {id:2,text:"登别温泉建议穿浴衣在温泉街散步"},
+  {id:3,text:"函馆山夜景看天气决定，可能需备选方案"},
+  {id:4,text:"Shibuya Sky 提前在官网预约夜景门票"},
+];
+
+const DEFAULT_BUDGET={
+  jrPass:30000, tokyoTransport:5000, food:60000, shopping:50000, misc:10000
 };
 
-function save(key,val){ try{localStorage.setItem(key,JSON.stringify(val))}catch(e){} }
-function load(key,def){ try{const v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def} }
+const LOC_COLOR={"札幌":"sapporo","小樽":"otaru","旭川":"asahikawa","登别":"noboribetsu","洞爷湖":"toyako","函馆":"hakodate","东京":"tokyo","浅草":"asakusa"};
 
-let entries = load('entries', DEFAULT_ENTRIES);
-let checkItems = load('checkItems', DEFAULT_CHECKS);
-let checkedSet = new Set(load('checked', []));
-let filterLoc = "全部";
-let editingId = null;
-let nextId = Math.max(...entries.map(e=>e.id), 0) + 1;
+// ── State ──
+let entries=load('entries',DEFAULT_ENTRIES);
+let checkItems=load('checkItems',DEFAULT_CHECKS);
+let checkedSet=new Set(load('checked',[]));
+let hotels=load('hotels',DEFAULT_HOTELS);
+let links=load('links',DEFAULT_LINKS);
+let notes=load('notes',DEFAULT_NOTES);
+let budget=load('budget',DEFAULT_BUDGET);
+let filterLoc="全部";
+let editingId=null;
+let editingHotelId=null;
+let editingLinkId=null;
+let editingNoteId=null;
+let nextId=Math.max(...entries.map(e=>e.id),0)+1;
+let nextHotelId=Math.max(...hotels.map(h=>h.id),0)+1;
+let nextLinkId=Math.max(...links.map(l=>l.id),0)+1;
+let nextNoteId=Math.max(...notes.map(n=>n.id),0)+1;
 
-function saveAll(){
-  save('entries', entries);
-  save('checkItems', checkItems);
-  save('checked', [...checkedSet]);
-}
+function saveAll(){save('entries',entries);save('checkItems',checkItems);save('checked',[...checkedSet]);}
+function saveHotels(){save('hotels',hotels);renderLinksPanel();}  // sync to links
+function saveLinks(){save('links',links);}
+function saveNotes(){save('notes',notes);}
+function saveBudget(){save('budget',budget);}
 
-function locColor(loc){ return LOC_COLOR[loc] || 'other'; }
-
-function getAllLocs(){
-  return ["全部", ...new Set(entries.map(e=>e.loc))];
-}
+function locColor(loc){return LOC_COLOR[loc]||'other';}
 
 function formatDate(d){
-  const dt = new Date(d);
-  if(isNaN(dt)) return d;
+  const dt=new Date(d);if(isNaN(dt))return d;
   const days=["日","一","二","三","四","五","六"];
   return `${dt.getMonth()+1}月${dt.getDate()}日 周${days[dt.getDay()]}`;
 }
 
+// ── Tab ──
 function switchTab(tab){
-  ['itinerary','checklist','links','budget'].forEach(t=>{
-    const panel = document.getElementById('panel-'+t);
-    panel.style.display = t===tab ? 'flex' : 'none';
-    panel.classList.toggle('active', t===tab);
-    document.getElementById('nav-'+t).classList.toggle('active', t===tab);
+  ['itinerary','checklist','hotel','links','budget'].forEach(t=>{
+    const p=document.getElementById('panel-'+t);
+    p.style.display=t===tab?'flex':'none';
+    p.classList.toggle('active',t===tab);
+    document.getElementById('nav-'+t).classList.toggle('active',t===tab);
   });
-  document.getElementById('add-fab').style.display = tab==='itinerary'?'':'none';
+  document.getElementById('add-fab').style.display=tab==='itinerary'?'':'none';
+  if(tab==='links') renderLinksPanel();
+  if(tab==='budget') renderBudget();
 }
 
+// ── Itinerary ──
+function getAllLocs(){return["全部",...new Set(entries.map(e=>e.loc))];}
 function renderFilters(){
-  const row = document.getElementById('filter-row');
-  const locs = getAllLocs();
-  row.innerHTML = locs.map(l=>`<button class="chip ${l===filterLoc?'active':''}" onclick="setFilter('${l}')">${l}</button>`).join('');
+  document.getElementById('filter-row').innerHTML=getAllLocs().map(l=>`<button class="chip ${l===filterLoc?'active':''}" onclick="setFilter('${l}')">${l}</button>`).join('');
 }
-
-function setFilter(loc){ filterLoc=loc; renderFilters(); renderItinerary(); }
+function setFilter(loc){filterLoc=loc;renderFilters();renderItinerary();}
 
 function renderItinerary(){
-  const list = document.getElementById('itinerary-list');
-  const filtered = filterLoc==="全部" ? entries : entries.filter(e=>e.loc===filterLoc);
-  const groups = {};
-  filtered.forEach(e=>{
-    if(!groups[e.date]) groups[e.date]=[];
-    groups[e.date].push(e);
-  });
-  if(!filtered.length){
-    list.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>暂无行程</p></div>`;
-    updateStats(); return;
-  }
+  const list=document.getElementById('itinerary-list');
+  const filtered=filterLoc==="全部"?entries:entries.filter(e=>e.loc===filterLoc);
+  const groups={};
+  filtered.forEach(e=>{if(!groups[e.date])groups[e.date]=[];groups[e.date].push(e);});
+  if(!filtered.length){list.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/></svg><p>暂无行程</p></div>`;updateStats();return;}
   let html='';
   Object.keys(groups).sort().forEach(date=>{
     const items=groups[date];
     const locs=[...new Set(items.map(e=>e.loc))];
-    const badges=locs.map(l=>`<span class="day-badge loc-${locColor(l)}">${l}</span>`).join(' ');
-    html+=`<div class="day-group"><div class="day-header"><span class="day-date">${formatDate(date)}</span>${badges}</div>`;
+    html+=`<div class="day-group"><div class="day-header"><span class="day-date">${formatDate(date)}</span>${locs.map(l=>`<span class="day-badge loc-${locColor(l)}">${l}</span>`).join(' ')}</div>`;
     items.forEach(e=>{
-      if(editingId===e.id){ html+=renderForm(e); return; }
-      const costTag = e.cost&&e.cost!=='免费'?`<span class="meta-tag cost">RM ${e.cost}</span>`:e.cost==='免费'?`<span class="meta-tag free">免费</span>`:'';
-      const transTag = e.transport?`<span class="meta-tag transport">${e.transport}</span>`:'';
-      const noteTag = e.note?`<span class="meta-tag note">${e.note}</span>`:'';
+      if(editingId===e.id){html+=renderEntryForm(e);return;}
+      const costTag=e.cost&&e.cost!=='免费'?`<span class="meta-tag cost">¥${e.cost}</span>`:e.cost==='免费'?`<span class="meta-tag free">免费</span>`:'';
+      const transTag=e.transport?`<span class="meta-tag transport">${e.transport}</span>`:'';
+      const noteTag=e.note?`<span class="meta-tag note">${e.note}</span>`:'';
       html+=`<div class="entry-card color-${locColor(e.loc)}" onclick="startEdit(${e.id})">
         <div class="entry-top">
           <div class="entry-time">${e.time}</div>
@@ -539,20 +479,20 @@ function renderItinerary(){
   updateStats();
 }
 
-function renderForm(e){
+function renderEntryForm(e){
   return `<div class="edit-form">
     <div class="form-row">
       <div><label class="form-label">日期</label><input class="form-input" id="ef-date" type="date" value="${e.date}"/></div>
-      <div><label class="form-label">地点</label><input class="form-input" id="ef-loc" type="text" value="${e.loc}"/></div>
+      <div><label class="form-label">地点</label><input class="form-input" id="ef-loc" value="${e.loc}"/></div>
     </div>
     <div class="form-row">
-      <div><label class="form-label">时间</label><input class="form-input" id="ef-time" type="text" value="${e.time}" placeholder="09:00-12:00"/></div>
-      <div><label class="form-label">费用(JPY 日元)</label><input class="form-input" id="ef-cost" type="text" value="${e.cost}" placeholder="1000或免费"/></div>
+      <div><label class="form-label">时间</label><input class="form-input" id="ef-time" value="${e.time}" placeholder="09:00-12:00"/></div>
+      <div><label class="form-label">费用 (日元)</label><input class="form-input" id="ef-cost" value="${e.cost}" placeholder="1000或免费"/></div>
     </div>
-    <div class="form-full"><label class="form-label">活动内容</label><input class="form-input" id="ef-act" type="text" value="${e.act}"/></div>
+    <div class="form-full"><label class="form-label">活动内容</label><input class="form-input" id="ef-act" value="${e.act}"/></div>
     <div class="form-row">
-      <div><label class="form-label">交通</label><input class="form-input" id="ef-transport" type="text" value="${e.transport}"/></div>
-      <div><label class="form-label">备注</label><input class="form-input" id="ef-note" type="text" value="${e.note}"/></div>
+      <div><label class="form-label">交通</label><input class="form-input" id="ef-transport" value="${e.transport}"/></div>
+      <div><label class="form-label">备注</label><input class="form-input" id="ef-note" value="${e.note}"/></div>
     </div>
     <div class="form-actions">
       <button class="btn" onclick="cancelEdit()">取消</button>
@@ -561,12 +501,10 @@ function renderForm(e){
   </div>`;
 }
 
-function startEdit(id){ editingId=id; renderItinerary(); }
-function cancelEdit(){ editingId=null; renderItinerary(); }
-
+function startEdit(id){editingId=id;renderItinerary();}
+function cancelEdit(){editingId=null;renderItinerary();}
 function saveEdit(id){
-  const idx=entries.findIndex(e=>e.id===id);
-  if(idx<0) return;
+  const idx=entries.findIndex(e=>e.id===id);if(idx<0)return;
   entries[idx]={...entries[idx],
     date:document.getElementById('ef-date').value,
     loc:document.getElementById('ef-loc').value,
@@ -576,120 +514,395 @@ function saveEdit(id){
     transport:document.getElementById('ef-transport').value,
     note:document.getElementById('ef-note').value,
   };
-  editingId=null; saveAll(); renderFilters(); renderItinerary(); showToast('已保存 ✓');
+  editingId=null;saveAll();renderFilters();renderItinerary();showToast('已保存 ✓');
 }
-
-function delEntry(id){
-  if(!confirm('确定删除这条行程？')) return;
-  entries=entries.filter(e=>e.id!==id);
-  saveAll(); renderFilters(); renderItinerary();
-}
-
+function delEntry(id){if(!confirm('确定删除？'))return;entries=entries.filter(e=>e.id!==id);saveAll();renderFilters();renderItinerary();}
 function addEntry(){
   const e={id:nextId++,date:"2026-11-21",loc:"札幌",time:"09:00-10:00",act:"新行程",transport:"步行",cost:"",note:""};
-  entries.unshift(e); editingId=e.id;
-  saveAll(); renderFilters(); renderItinerary();
+  entries.unshift(e);editingId=e.id;saveAll();renderFilters();renderItinerary();
   document.getElementById('itinerary-list').scrollTop=0;
 }
-
 function updateStats(){
   document.getElementById('stat-items').textContent=entries.length;
-  let total=0;
-  entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c))total+=c;});
-  document.getElementById('stat-cost').textContent=total?'RM '+total.toLocaleString():'RM 0';
-  renderBudget(total);
+  let total=0;entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c))total+=c;});
+  document.getElementById('stat-cost').textContent=total?'¥'+total.toLocaleString():'¥0';
 }
 
+// ── Checklist ──
 function renderChecklist(){
-  const grid=document.getElementById('check-grid');
-  grid.innerHTML=checkItems.map((item,i)=>{
+  document.getElementById('check-grid').innerHTML=checkItems.map((item,i)=>{
     const done=checkedSet.has(i);
     return `<div class="check-item ${done?'done':''}" onclick="toggleCheck(${i})">
       <div class="check-box">${done?'✓':''}</div>
       <span class="check-label">${item}</span>
-      <button class="check-del" onclick="event.stopPropagation();delCheckItem(${i})" aria-label="删除">✕</button>
+      <button class="check-del" onclick="event.stopPropagation();delCheckItem(${i})">✕</button>
     </div>`;
   }).join('');
   const pct=checkItems.length?Math.round(checkedSet.size/checkItems.length*100):0;
   document.getElementById('stat-check').textContent=pct+'%';
   document.getElementById('check-fill').style.width=pct+'%';
 }
-
-function toggleCheck(i){
-  if(checkedSet.has(i)) checkedSet.delete(i); else checkedSet.add(i);
-  saveAll(); renderChecklist();
-}
-
-function checkAll(){ checkItems.forEach((_,i)=>checkedSet.add(i)); saveAll(); renderChecklist(); }
-function uncheckAll(){ checkedSet.clear(); saveAll(); renderChecklist(); }
-
+function toggleCheck(i){if(checkedSet.has(i))checkedSet.delete(i);else checkedSet.add(i);saveAll();renderChecklist();}
+function checkAll(){checkItems.forEach((_,i)=>checkedSet.add(i));saveAll();renderChecklist();}
+function uncheckAll(){checkedSet.clear();saveAll();renderChecklist();}
 function addCheckItem(){
   const inp=document.getElementById('new-item-input');
-  const val=inp.value.trim();
-  if(!val) return;
-  checkItems.push(val); inp.value='';
-  saveAll(); renderChecklist(); showToast('已添加 ✓');
+  const val=inp.value.trim();if(!val)return;
+  checkItems.push(val);inp.value='';saveAll();renderChecklist();showToast('已添加 ✓');
 }
-
 function delCheckItem(i){
   checkItems.splice(i,1);
   checkedSet=new Set([...checkedSet].filter(x=>x<i).concat([...checkedSet].filter(x=>x>i).map(x=>x-1)));
-  saveAll(); renderChecklist();
+  saveAll();renderChecklist();
 }
 
-function renderBudget(total){
-  if(total===undefined){
-    total=0; entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c))total+=c;});
+// ── Hotels ──
+function renderHotels(){
+  const list=document.getElementById('hotel-list');
+  if(!hotels.length){list.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><p>暂无住宿</p></div>`;return;}
+  list.innerHTML=hotels.map(h=>{
+    if(editingHotelId===h.id)return renderHotelForm(h);
+    const nights=h.checkin&&h.checkout?Math.round((new Date(h.checkout)-new Date(h.checkin))/(864e5)):'';
+    const costTag=h.cost?`<span class="hotel-tag cost">RM ${h.cost}</span>`:'';
+    const noteTag=h.note?`<span class="hotel-tag note">${h.note}</span>`:'';
+    const linkEl=h.url?`<a href="${h.url}" target="_blank" class="hotel-link" onclick="event.stopPropagation()">🔗 查看预订链接</a>`:'';
+    return `<div class="hotel-card" onclick="editHotel(${h.id})">
+      <div class="hotel-header">
+        <div class="hotel-emoji">${h.emoji||'🏨'}</div>
+        <div class="hotel-info">
+          <div class="hotel-name">${h.name}</div>
+          <div class="hotel-loc">${h.loc}</div>
+          <div class="hotel-dates">
+            <span class="hotel-date-tag">📅 ${h.checkin||'?'} → ${h.checkout||'?'}</span>
+            ${nights?`<span class="hotel-date-tag">${nights}晚</span>`:''}
+          </div>
+          <div class="hotel-meta">
+            <span class="hotel-tag ${h.status==='confirmed'?'confirmed':'pending'}">${h.status==='confirmed'?'✓ 已确认':'⏳ 待确认'}</span>
+            ${costTag}${noteTag}
+          </div>
+          ${linkEl}
+        </div>
+        <div class="hotel-actions">
+          <button class="mini-btn del" onclick="event.stopPropagation();delHotel(${h.id})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderHotelForm(h){
+  return `<div class="edit-form">
+    <div class="form-row">
+      <div><label class="form-label">表情</label><input class="form-input" id="hf-emoji" value="${h.emoji||'🏨'}" style="font-size:20px"/></div>
+      <div><label class="form-label">状态</label>
+        <select class="form-input" id="hf-status">
+          <option value="confirmed" ${h.status==='confirmed'?'selected':''}>✓ 已确认</option>
+          <option value="pending" ${h.status==='pending'?'selected':''}>⏳ 待确认</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-full"><label class="form-label">住宿名称</label><input class="form-input" id="hf-name" value="${h.name}"/></div>
+    <div class="form-row">
+      <div><label class="form-label">地点</label><input class="form-input" id="hf-loc" value="${h.loc}"/></div>
+      <div><label class="form-label">费用 (RM)</label><input class="form-input" id="hf-cost" value="${h.cost}" placeholder="可选"/></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">入住日期</label><input class="form-input" id="hf-checkin" type="date" value="${h.checkin}"/></div>
+      <div><label class="form-label">退房日期</label><input class="form-input" id="hf-checkout" type="date" value="${h.checkout}"/></div>
+    </div>
+    <div class="form-full"><label class="form-label">预订链接</label><input class="form-input" id="hf-url" value="${h.url}" placeholder="https://..."/></div>
+    <div class="form-full"><label class="form-label">备注</label><input class="form-input" id="hf-note" value="${h.note}" placeholder="可选"/></div>
+    <div class="form-actions">
+      <button class="btn" onclick="cancelHotelEdit()">取消</button>
+      <button class="btn btn-accent" onclick="saveHotel(${h.id})">保存</button>
+    </div>
+  </div>`;
+}
+
+function editHotel(id){editingHotelId=id;renderHotels();}
+function cancelHotelEdit(){editingHotelId=null;renderHotels();}
+function saveHotel(id){
+  const idx=hotels.findIndex(h=>h.id===id);if(idx<0)return;
+  hotels[idx]={...hotels[idx],
+    emoji:document.getElementById('hf-emoji').value,
+    status:document.getElementById('hf-status').value,
+    name:document.getElementById('hf-name').value,
+    loc:document.getElementById('hf-loc').value,
+    cost:document.getElementById('hf-cost').value,
+    checkin:document.getElementById('hf-checkin').value,
+    checkout:document.getElementById('hf-checkout').value,
+    url:document.getElementById('hf-url').value,
+    note:document.getElementById('hf-note').value,
+  };
+  editingHotelId=null;saveHotels();renderHotels();showToast('已保存 ✓');
+}
+function delHotel(id){if(!confirm('确定删除？'))return;hotels=hotels.filter(h=>h.id!==id);saveHotels();renderHotels();}
+function addHotel(){
+  const h={id:nextHotelId++,name:"新住宿",loc:"",emoji:"🏨",checkin:"2026-11-21",checkout:"2026-11-22",cost:"",status:"pending",note:"",url:""};
+  hotels.push(h);editingHotelId=h.id;saveHotels();renderHotels();
+}
+
+// ── Links Panel ── (shows hotel links synced from hotel data + custom links + notes)
+function renderLinksPanel(){
+  const el=document.getElementById('links-content');
+  if(!el)return;
+
+  // Group custom links by category
+  const cats={};
+  links.forEach(l=>{if(!cats[l.category])cats[l.category]=[];cats[l.category].push(l);});
+
+  let html='';
+
+  // Custom link sections
+  Object.entries(cats).forEach(([cat,items])=>{
+    html+=`<div class="link-section">
+      <div class="link-section-header">
+        <span class="link-section-title">${cat}</span>
+        <button class="btn btn-sm" onclick="addLink('${cat.replace(/'/g,"\\'")}')">+ 添加</button>
+      </div>`;
+    items.forEach(l=>{
+      if(editingLinkId===l.id){
+        html+=renderLinkForm(l);
+      } else {
+        html+=`<div class="link-row">
+          <div class="link-icon">${l.icon||'🔗'}</div>
+          <a href="${l.url}" target="_blank" class="link-text" style="text-decoration:none">
+            <div class="link-name">${l.name}</div>
+            <div class="link-url">${l.desc||l.url}</div>
+          </a>
+          <button class="link-edit-btn" onclick="editLink(${l.id})">✏️</button>
+          <button class="link-edit-btn" onclick="delLink(${l.id})" style="color:var(--red)">✕</button>
+        </div>`;
+      }
+    });
+    html+='</div>';
+  });
+
+  // Add new category button
+  html+=`<button class="btn btn-sm" style="margin-bottom:12px;width:100%" onclick="addLinkNewCat()">+ 新建分类</button>`;
+
+  // Hotels section — synced from hotel data
+  html+=`<div class="link-section">
+    <div class="link-section-header">
+      <span class="link-section-title">🏨 住宿链接</span>
+      <span style="font-size:11px;color:var(--text2)">同步自住宿页面</span>
+    </div>`;
+  hotels.filter(h=>h.url).forEach(h=>{
+    html+=`<div class="link-row">
+      <div class="link-icon">${h.emoji||'🏨'}</div>
+      <a href="${h.url}" target="_blank" class="link-text" style="text-decoration:none">
+        <div class="link-name">${h.name}</div>
+        <div class="link-url">${h.checkin} → ${h.checkout} · ${h.loc}</div>
+      </a>
+      <span style="font-size:11px;color:var(--text2)">›</span>
+    </div>`;
+  });
+  if(!hotels.filter(h=>h.url).length){
+    html+=`<div style="font-size:13px;color:var(--text2);padding:8px 0">住宿页面中暂无链接</div>`;
   }
-  document.getElementById('budget-total').textContent='RM '+total.toLocaleString();
+  html+='</div>';
+
+  // Notes section
+  html+=`<div class="link-section">
+    <div class="link-section-header">
+      <span class="link-section-title">📝 旅行备注</span>
+      <button class="btn btn-sm" onclick="addNote()">+ 添加</button>
+    </div>`;
+  notes.forEach((n,i)=>{
+    if(editingNoteId===n.id){
+      html+=`<div class="note-edit-form">
+        <textarea id="note-input-${n.id}">${n.text}</textarea>
+        <div class="form-actions" style="margin-top:6px">
+          <button class="btn" onclick="cancelNoteEdit()">取消</button>
+          <button class="btn btn-accent" onclick="saveNote(${n.id})">保存</button>
+        </div>
+      </div>`;
+    } else {
+      html+=`<div class="note-item">
+        <div class="note-num">${i+1}.</div>
+        <div class="note-text">${n.text}</div>
+        <div class="note-actions">
+          <button class="btn btn-sm" onclick="editNote(${n.id})">编辑</button>
+          <button class="btn btn-sm" style="color:var(--red)" onclick="delNote(${n.id})">删除</button>
+        </div>
+      </div>`;
+    }
+  });
+  html+='</div>';
+
+  el.innerHTML=html;
+}
+
+function renderLinkForm(l){
+  return `<div class="link-edit-row">
+    <div class="form-row" style="margin-bottom:6px">
+      <div><label class="form-label">图标</label><input class="form-input" id="lf-icon-${l.id}" value="${l.icon||'🔗'}" style="font-size:18px"/></div>
+      <div><label class="form-label">分类</label><input class="form-input" id="lf-cat-${l.id}" value="${l.category}"/></div>
+    </div>
+    <div style="margin-bottom:6px"><label class="form-label">名称</label><input class="form-input" id="lf-name-${l.id}" value="${l.name}"/></div>
+    <div style="margin-bottom:6px"><label class="form-label">链接</label><input class="form-input" id="lf-url-${l.id}" value="${l.url}" placeholder="https://..."/></div>
+    <div style="margin-bottom:8px"><label class="form-label">描述</label><input class="form-input" id="lf-desc-${l.id}" value="${l.desc||''}"/></div>
+    <div class="form-actions">
+      <button class="btn" onclick="cancelLinkEdit()">取消</button>
+      <button class="btn btn-accent" onclick="saveLink(${l.id})">保存</button>
+    </div>
+  </div>`;
+}
+
+function editLink(id){editingLinkId=id;renderLinksPanel();}
+function cancelLinkEdit(){editingLinkId=null;renderLinksPanel();}
+function saveLink(id){
+  const idx=links.findIndex(l=>l.id===id);if(idx<0)return;
+  links[idx]={...links[idx],
+    icon:document.getElementById('lf-icon-'+id).value,
+    category:document.getElementById('lf-cat-'+id).value,
+    name:document.getElementById('lf-name-'+id).value,
+    url:document.getElementById('lf-url-'+id).value,
+    desc:document.getElementById('lf-desc-'+id).value,
+  };
+  editingLinkId=null;saveLinks();renderLinksPanel();showToast('已保存 ✓');
+}
+function delLink(id){if(!confirm('确定删除？'))return;links=links.filter(l=>l.id!==id);saveLinks();renderLinksPanel();}
+function addLink(cat){
+  const l={id:nextLinkId++,category:cat,icon:'🔗',name:'新链接',desc:'',url:''};
+  links.push(l);editingLinkId=l.id;saveLinks();renderLinksPanel();
+}
+function addLinkNewCat(){
+  const cat=prompt('输入新分类名称（含emoji）:','📌 其他');
+  if(!cat)return;
+  const l={id:nextLinkId++,category:cat,icon:'🔗',name:'新链接',desc:'',url:''};
+  links.push(l);editingLinkId=l.id;saveLinks();renderLinksPanel();
+}
+
+function editNote(id){editingNoteId=id;renderLinksPanel();}
+function cancelNoteEdit(){editingNoteId=null;renderLinksPanel();}
+function saveNote(id){
+  const idx=notes.findIndex(n=>n.id===id);if(idx<0)return;
+  notes[idx].text=document.getElementById('note-input-'+id).value;
+  editingNoteId=null;saveNotes();renderLinksPanel();showToast('已保存 ✓');
+}
+function delNote(id){if(!confirm('确定删除？'))return;notes=notes.filter(n=>n.id!==id);saveNotes();renderLinksPanel();}
+function addNote(){
+  const n={id:nextNoteId++,text:'新备注'};
+  notes.push(n);editingNoteId=n.id;saveNotes();renderLinksPanel();
+}
+
+// ── Budget ──
+function renderBudget(){
+  const el=document.getElementById('budget-content');
+  if(!el)return;
+
+  // Ticket costs from entries
+  let ticketTotal=0;
   const byCat={};
-  entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c)){if(!byCat[e.loc])byCat[e.loc]=0;byCat[e.loc]+=c;}});
+  entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c)){ticketTotal+=c;if(!byCat[e.loc])byCat[e.loc]=0;byCat[e.loc]+=c;}});
+
+  // Hotel costs
+  let hotelTotal=0;
+  hotels.forEach(h=>{const c=parseInt(h.cost);if(!isNaN(c))hotelTotal+=c;});
+
+  const b=budget;
+  const grandTotal=ticketTotal+hotelTotal+b.jrPass+b.tokyoTransport+b.food+b.shopping+b.misc;
+
   const sorted=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
-  const max=sorted[0]?sorted[0][1]:1;
+  const maxAmt=sorted[0]?sorted[0][1]:1;
   const colors=['#7c6aff','#36d4b0','#ffb547','#ff6b9d','#4ecdc4','#ff6b6b','#64c8ff','#a594ff'];
-  document.getElementById('budget-by-loc').innerHTML=`
-    <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">按地区门票/车票</div>
+
+  let html=`
+  <div class="budget-total">
+    <div><div class="budget-total-label">行程总预算</div><div style="font-size:11px;color:var(--text2);margin-top:2px">所有费用合计</div></div>
+    <div class="budget-total-val">¥${grandTotal.toLocaleString()}</div>
+  </div>
+
+  <div class="budget-card">
+    <div class="budget-card-title">🎫 门票 & 车票 <span style="color:var(--teal)">¥${ticketTotal.toLocaleString()}</span></div>
     ${sorted.map(([loc,amt],i)=>`
       <div class="budget-row">
         <span class="budget-loc">${loc}</span>
-        <span class="budget-amt">RM ${amt.toLocaleString()}</span>
+        <span class="budget-amt">¥${amt.toLocaleString()}</span>
       </div>
-      <div class="budget-bar"><div class="budget-bar-fill" style="width:${Math.round(amt/max*100)}%;background:${colors[i%colors.length]}"></div></div>
+      <div class="budget-bar"><div class="budget-bar-fill" style="width:${Math.round(amt/maxAmt*100)}%;background:${colors[i%colors.length]}"></div></div>
     `).join('')}
-    ${sorted.length===0?'<div style="color:var(--text2);font-size:13px;padding:8px 0">暂无费用数据</div>':''}
-  `;
+    ${sorted.length===0?'<div style="color:var(--text2);font-size:13px;padding:4px 0">行程中暂无费用标注</div>':''}
+  </div>
+
+  <div class="budget-card">
+    <div class="budget-card-title">🏨 住宿费用 <span style="color:var(--teal)">${hotelTotal?'¥'+hotelTotal.toLocaleString():'未填写'}</span></div>
+    ${hotels.map(h=>`
+      <div class="budget-row">
+        <span class="budget-loc">${h.emoji||'🏨'} ${h.name}</span>
+        <span class="budget-amt">${h.cost?'RM '+parseInt(h.cost).toLocaleString():'—'}</span>
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="budget-card">
+    <div class="budget-card-title">✏️ 其他费用估算 <span style="font-size:11px;color:var(--text2);font-weight:400">点击金额可修改</span></div>
+    <div class="budget-cat-row">
+      <span class="budget-cat-label">🚄 北海道JR Pass (7天)</span>
+      <input class="budget-cat-input" value="${b.jrPass}" onchange="updateBudget('jrPass',this.value)" type="number"/>
+    </div>
+    <div class="budget-cat-row">
+      <span class="budget-cat-label">🚇 东京交通 IC 卡</span>
+      <input class="budget-cat-input" value="${b.tokyoTransport}" onchange="updateBudget('tokyoTransport',this.value)" type="number"/>
+    </div>
+    <div class="budget-cat-row">
+      <span class="budget-cat-label">🍜 餐饮 (15天)</span>
+      <input class="budget-cat-input" value="${b.food}" onchange="updateBudget('food',this.value)" type="number"/>
+    </div>
+    <div class="budget-cat-row">
+      <span class="budget-cat-label">🛍️ 购物预算</span>
+      <input class="budget-cat-input" value="${b.shopping}" onchange="updateBudget('shopping',this.value)" type="number"/>
+    </div>
+    <div class="budget-cat-row">
+      <span class="budget-cat-label">📦 其他杂项</span>
+      <input class="budget-cat-input" value="${b.misc}" onchange="updateBudget('misc',this.value)" type="number"/>
+    </div>
+  </div>
+
+  <div class="budget-card">
+    <div class="budget-card-title">📊 费用汇总</div>
+    <div class="budget-summary-row"><span class="budget-label-muted">门票 & 车票</span><span>¥${ticketTotal.toLocaleString()}</span></div>
+    <div class="budget-summary-row"><span class="budget-label-muted">住宿</span><span>${hotelTotal?'RM '+hotelTotal.toLocaleString():'未填写'}</span></div>
+    <div class="budget-summary-row"><span class="budget-label-muted">JR Pass</span><span>¥${b.jrPass.toLocaleString()}</span></div>
+    <div class="budget-summary-row"><span class="budget-label-muted">东京交通</span><span>¥${b.tokyoTransport.toLocaleString()}</span></div>
+    <div class="budget-summary-row"><span class="budget-label-muted">餐饮</span><span>¥${b.food.toLocaleString()}</span></div>
+    <div class="budget-summary-row"><span class="budget-label-muted">购物</span><span>¥${b.shopping.toLocaleString()}</span></div>
+    <div class="budget-summary-row"><span class="budget-label-muted">杂项</span><span>¥${b.misc.toLocaleString()}</span></div>
+    <div class="budget-summary-row grand"><span>总计</span><span>¥${grandTotal.toLocaleString()}</span></div>
+  </div>`;
+
+  el.innerHTML=html;
 }
 
+function updateBudget(key,val){
+  budget[key]=parseInt(val)||0;
+  saveBudget();renderBudget();
+}
+
+// ── Export ──
 function exportCSV(){
   const rows=[["日期","地点","时间","活动","交通","费用","备注"]];
   entries.forEach(e=>rows.push([e.date,e.loc,e.time,'"'+e.act+'"',e.transport,e.cost,'"'+e.note+'"']));
   const csv='\ufeff'+rows.map(r=>r.join(',')).join('\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
-  a.download='japan_travel_plan.csv'; a.click();
-  showToast('已导出 CSV ✓');
+  a.download='japan_travel.csv';a.click();
+  showToast('已导出 ✓');
 }
 
 function showToast(msg){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
+  t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2000);
 }
 
-// Save note on change
-document.getElementById('custom-note').addEventListener('input', function(){
-  save('customNote', this.value);
-});
-const savedNote=load('customNote',null);
-if(savedNote) document.getElementById('custom-note').value=savedNote;
+// ── Init ──
+renderFilters();renderItinerary();renderChecklist();renderHotels();
 
-// Init
-renderFilters(); renderItinerary(); renderChecklist(); renderBudget();
-
-// Service Worker registration
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 </script>
 </body>
 </html>
