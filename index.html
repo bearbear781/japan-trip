@@ -35,8 +35,8 @@
   --safe-bot: env(safe-area-inset-bottom, 0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display',sans-serif;overflow:hidden}
-body{display:flex;flex-direction:column}
+html{height:100%;background:var(--bg)}
+body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display',sans-serif;display:flex;flex-direction:column;overflow:hidden}
 
 /* Top bar */
 .topbar{
@@ -80,9 +80,9 @@ body{display:flex;flex-direction:column}
 .nav-item span{font-size:10px;font-weight:500}
 
 /* Scroll content */
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px;padding-bottom:20px}
-.panel{display:none}
-.panel.active{display:block}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px;padding-bottom:30px}
+.panel{display:none;flex:1;flex-direction:column;min-height:0;overflow:hidden}
+.panel.active{display:flex}
 
 /* Filter chips */
 .filter-scroll{display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none;flex-shrink:0}
@@ -245,7 +245,7 @@ body{display:flex;flex-direction:column}
     <div class="stat-label">行程项目</div>
   </div>
   <div class="stat">
-    <div class="stat-val" id="stat-cost">¥0</div>
+    <div class="stat-val" id="stat-cost">RM 0</div>
     <div class="stat-label">门票小计</div>
   </div>
   <div class="stat">
@@ -256,7 +256,7 @@ body{display:flex;flex-direction:column}
 </div>
 
 <!-- Panel: Itinerary -->
-<div id="panel-itinerary" class="panel active">
+<div id="panel-itinerary" class="panel active" style="display:flex">
   <div class="filter-scroll" id="filter-row"></div>
   <div class="content" id="itinerary-list"></div>
 </div>
@@ -349,14 +349,14 @@ Shibuya Sky 提前在官网预约夜景门票</textarea>
     </div>
     <div class="budget-total">
       <div><div class="budget-total-label">门票 & 车票合计</div><div style="font-size:11px;color:var(--text2);margin-top:2px">行程中标注费用</div></div>
-      <div class="budget-total-val" id="budget-total">¥0</div>
+      <div class="budget-total-val" id="budget-total">RM 0</div>
     </div>
     <div class="budget-card" id="budget-by-loc"></div>
     <div class="budget-card">
       <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">其他费用参考</div>
-      <div class="budget-row"><span class="budget-loc">北海道JR Pass (7天)</span><span class="budget-amt">~¥30,000</span></div>
-      <div class="budget-row"><span class="budget-loc">东京交通 IC 卡</span><span class="budget-amt">~¥5,000</span></div>
-      <div class="budget-row"><span class="budget-loc">餐饮 (15天)</span><span class="budget-amt">~¥60,000</span></div>
+      <div class="budget-row"><span class="budget-loc">北海道JR Pass (7天)</span><span class="budget-amt">~RM 30,000</span></div>
+      <div class="budget-row"><span class="budget-loc">东京交通 IC 卡</span><span class="budget-amt">~RM 5,000</span></div>
+      <div class="budget-row"><span class="budget-loc">餐饮 (15天)</span><span class="budget-amt">~RM 60,000</span></div>
       <div class="budget-row"><span class="budget-loc">购物预算</span><span style="font-size:13px;color:var(--text2)">按需</span></div>
     </div>
   </div>
@@ -481,8 +481,9 @@ function formatDate(d){
 
 function switchTab(tab){
   ['itinerary','checklist','links','budget'].forEach(t=>{
-    document.getElementById('panel-'+t).style.display = t===tab?'':'none';
-    document.getElementById('panel-'+t).classList.toggle('active', t===tab);
+    const panel = document.getElementById('panel-'+t);
+    panel.style.display = t===tab ? 'flex' : 'none';
+    panel.classList.toggle('active', t===tab);
     document.getElementById('nav-'+t).classList.toggle('active', t===tab);
   });
   document.getElementById('add-fab').style.display = tab==='itinerary'?'':'none';
@@ -516,7 +517,7 @@ function renderItinerary(){
     html+=`<div class="day-group"><div class="day-header"><span class="day-date">${formatDate(date)}</span>${badges}</div>`;
     items.forEach(e=>{
       if(editingId===e.id){ html+=renderForm(e); return; }
-      const costTag = e.cost&&e.cost!=='免费'?`<span class="meta-tag cost">¥${e.cost}</span>`:e.cost==='免费'?`<span class="meta-tag free">免费</span>`:'';
+      const costTag = e.cost&&e.cost!=='免费'?`<span class="meta-tag cost">RM ${e.cost}</span>`:e.cost==='免费'?`<span class="meta-tag free">免费</span>`:'';
       const transTag = e.transport?`<span class="meta-tag transport">${e.transport}</span>`:'';
       const noteTag = e.note?`<span class="meta-tag note">${e.note}</span>`:'';
       html+=`<div class="entry-card color-${locColor(e.loc)}" onclick="startEdit(${e.id})">
@@ -546,7 +547,7 @@ function renderForm(e){
     </div>
     <div class="form-row">
       <div><label class="form-label">时间</label><input class="form-input" id="ef-time" type="text" value="${e.time}" placeholder="09:00-12:00"/></div>
-      <div><label class="form-label">费用(日元)</label><input class="form-input" id="ef-cost" type="text" value="${e.cost}" placeholder="1000或免费"/></div>
+      <div><label class="form-label">费用(JPY 日元)</label><input class="form-input" id="ef-cost" type="text" value="${e.cost}" placeholder="1000或免费"/></div>
     </div>
     <div class="form-full"><label class="form-label">活动内容</label><input class="form-input" id="ef-act" type="text" value="${e.act}"/></div>
     <div class="form-row">
@@ -595,7 +596,7 @@ function updateStats(){
   document.getElementById('stat-items').textContent=entries.length;
   let total=0;
   entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c))total+=c;});
-  document.getElementById('stat-cost').textContent=total?'¥'+total.toLocaleString():'¥0';
+  document.getElementById('stat-cost').textContent=total?'RM '+total.toLocaleString():'RM 0';
   renderBudget(total);
 }
 
@@ -640,7 +641,7 @@ function renderBudget(total){
   if(total===undefined){
     total=0; entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c))total+=c;});
   }
-  document.getElementById('budget-total').textContent='¥'+total.toLocaleString();
+  document.getElementById('budget-total').textContent='RM '+total.toLocaleString();
   const byCat={};
   entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c)){if(!byCat[e.loc])byCat[e.loc]=0;byCat[e.loc]+=c;}});
   const sorted=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
@@ -651,7 +652,7 @@ function renderBudget(total){
     ${sorted.map(([loc,amt],i)=>`
       <div class="budget-row">
         <span class="budget-loc">${loc}</span>
-        <span class="budget-amt">¥${amt.toLocaleString()}</span>
+        <span class="budget-amt">RM ${amt.toLocaleString()}</span>
       </div>
       <div class="budget-bar"><div class="budget-bar-fill" style="width:${Math.round(amt/max*100)}%;background:${colors[i%colors.length]}"></div></div>
     `).join('')}
