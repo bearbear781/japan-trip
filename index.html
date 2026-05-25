@@ -202,7 +202,8 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <div class="topbar-title">🗾 日本旅行计划</div>
     <div class="topbar-sub">北海道10天 · 东京5天 · 2026.11</div>
   </div>
-  <div style="display:flex;gap:8px">
+  <div style="display:flex;gap:8px;align-items:center">
+    <span id="sync-status" style="font-size:11px;color:var(--teal);opacity:0;transition:opacity 0.5s">☁️ 已同步</span>
     <button class="icon-btn" onclick="exportCSV()" title="导出CSV">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     </button>
@@ -304,10 +305,93 @@ body{min-height:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 
 <div class="toast" id="toast"></div>
 
-<script>
-// ── Storage ──
+<script type="module">
+// ── Firebase Config ──
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB3ozEMAcg9NoMfgDj9JhZ9e48sBrNyBkE",
+  authDomain: "japan-trip-baee2.firebaseapp.com",
+  projectId: "japan-trip-baee2",
+  storageBucket: "japan-trip-baee2.firebasestorage.app",
+  messagingSenderId: "747093248998",
+  appId: "1:747093248998:web:5af557da462ad849f46427"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const TRIP_DOC = doc(db, "trip", "main");
+
+// ── Storage (Firebase + localStorage fallback) ──
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function load(k,d){try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d}catch(e){return d}}
+
+let syncReady = false;
+let pendingRender = false;
+
+async function pushToFirebase() {
+  if (!syncReady) return;
+  try {
+    await setDoc(TRIP_DOC, {
+      entries, checkItems, checked: [...checkedSet],
+      hotels, links, notes, budget,
+      updatedAt: Date.now()
+    });
+  } catch(e) { console.warn('Firebase write failed', e); }
+}
+
+function showSyncStatus(msg, color='var(--teal)') {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = color;
+  el.style.opacity = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.opacity = '0'; }, 3000);
+}
+
+// Listen for realtime changes from other devices
+function startFirebaseSync() {
+  onSnapshot(TRIP_DOC, (snap) => {
+    if (!snap.exists()) {
+      // First time — push local data to Firebase
+      syncReady = true;
+      pushToFirebase();
+      showSyncStatus('☁️ 已连接');
+      return;
+    }
+    const data = snap.data();
+    // Only update if remote is newer than local
+    entries = data.entries || entries;
+    checkItems = data.checkItems || checkItems;
+    checkedSet = new Set(data.checked || []);
+    hotels = data.hotels || hotels;
+    links = data.links || links;
+    notes = data.notes || notes;
+    budget = data.budget || budget;
+    nextId = Math.max(...entries.map(e=>e.id), 0) + 1;
+    nextHotelId = Math.max(...hotels.map(h=>h.id), 0) + 1;
+    nextLinkId = Math.max(...links.map(l=>l.id), 0) + 1;
+    nextNoteId = Math.max(...notes.map(n=>n.id), 0) + 1;
+    // Save to localStorage as cache
+    save('entries', entries); save('checkItems', checkItems);
+    save('checked', [...checkedSet]); save('hotels', hotels);
+    save('links', links); save('notes', notes); save('budget', budget);
+    syncReady = true;
+    // Re-render current view
+    renderFilters(); renderItinerary(); renderChecklist(); renderHotels();
+    const activePanel = ['itinerary','checklist','hotel','links','budget'].find(t =>
+      document.getElementById('panel-'+t).classList.contains('active')
+    );
+    if (activePanel === 'links') renderLinksPanel();
+    if (activePanel === 'budget') renderBudget();
+    showSyncStatus('☁️ 已同步');
+  }, (err) => {
+    showSyncStatus('⚠️ 同步失败', 'var(--amber)');
+    syncReady = true; // allow local use
+  });
+}
 
 // ── Default Data ──
 const DEFAULT_ENTRIES=[
@@ -410,11 +494,11 @@ let nextHotelId=Math.max(...hotels.map(h=>h.id),0)+1;
 let nextLinkId=Math.max(...links.map(l=>l.id),0)+1;
 let nextNoteId=Math.max(...notes.map(n=>n.id),0)+1;
 
-function saveAll(){save('entries',entries);save('checkItems',checkItems);save('checked',[...checkedSet]);}
-function saveHotels(){save('hotels',hotels);renderLinksPanel();}  // sync to links
-function saveLinks(){save('links',links);}
-function saveNotes(){save('notes',notes);}
-function saveBudget(){save('budget',budget);}
+function saveAll(){save('entries',entries);save('checkItems',checkItems);save('checked',[...checkedSet]);pushToFirebase();}
+function saveHotels(){save('hotels',hotels);pushToFirebase();renderLinksPanel();}
+function saveLinks(){save('links',links);pushToFirebase();}
+function saveNotes(){save('notes',notes);pushToFirebase();}
+function saveBudget(){save('budget',budget);pushToFirebase();}
 
 function locColor(loc){return LOC_COLOR[loc]||'other';}
 
@@ -829,7 +913,7 @@ function renderBudget(){
   </div>
 
   <div class="budget-card">
-    <div class="budget-card-title">🏨 住宿费用 <span style="color:var(--teal)">${hotelTotal?'¥'+hotelTotal.toLocaleString():'未填写'}</span></div>
+    <div class="budget-card-title">🏨 住宿费用 <span style="color:var(--teal)">${hotelTotal?'RM '+hotelTotal.toLocaleString():'未填写'}</span></div>
     ${hotels.map(h=>`
       <div class="budget-row">
         <span class="budget-loc">${h.emoji||'🏨'} ${h.name}</span>
@@ -901,6 +985,17 @@ function showToast(msg){
 
 // ── Init ──
 renderFilters();renderItinerary();renderChecklist();renderHotels();
+startFirebaseSync();
+
+// Expose all functions globally (required for inline onclick with type="module")
+Object.assign(window, {
+  switchTab, setFilter, startEdit, cancelEdit, saveEdit, delEntry, addEntry,
+  toggleCheck, checkAll, uncheckAll, addCheckItem, delCheckItem,
+  editHotel, cancelHotelEdit, saveHotel, delHotel, addHotel,
+  editLink, cancelLinkEdit, saveLink, delLink, addLink, addLinkNewCat,
+  editNote, cancelNoteEdit, saveNote, delNote, addNote,
+  updateBudget, exportCSV, renderLinksPanel, renderBudget
+});
 
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 </script>
