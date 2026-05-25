@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#1a1a2e"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="日本之旅"/>
+<title>日本旅行计划 · 北海道 & 东京</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.svg"/>
+<style>
+:root {
+  --bg: #0f0f1a;
+  --bg2: #1a1a2e;
+  --bg3: #16213e;
+  --card: #1e1e35;
+  --card2: #252542;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #f0f0ff;
+  --text2: #9090b0;
+  --text3: #6060808;
+  --accent: #7c6aff;
+  --accent2: #a594ff;
+  --pink: #ff6b9d;
+  --teal: #36d4b0;
+  --amber: #ffb547;
+  --red: #ff6b6b;
+  --green: #4ecdc4;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display',sans-serif;overflow:hidden}
+body{display:flex;flex-direction:column}
+
+/* Top bar */
+.topbar{
+  background:var(--bg2);
+  padding:calc(var(--safe-top) + 12px) 16px 12px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+  position:sticky;top:0;z-index:50;
+}
+.topbar-title{font-size:17px;font-weight:600;color:var(--text)}
+.topbar-sub{font-size:12px;color:var(--text2);margin-top:1px}
+.topbar-right{display:flex;gap:8px}
+.icon-btn{width:36px;height:36px;border:1px solid var(--border2);border-radius:10px;background:none;color:var(--text2);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s}
+.icon-btn:active{transform:scale(0.9);background:var(--card2)}
+
+/* Stats row */
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  padding:12px 14px;background:var(--bg2);border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.stat{text-align:center}
+.stat-val{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px}
+.stat-val.accent{color:var(--accent2)}
+.stat-label{font-size:10px;color:var(--text2);margin-top:2px}
+.progress-mini{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:4px;overflow:hidden}
+.progress-mini-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--accent));border-radius:2px;transition:width 0.4s}
+
+/* Bottom nav */
+.bottomnav{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  display:flex;
+  padding:8px 0 calc(var(--safe-bot) + 8px);
+  flex-shrink:0;
+}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;transition:all 0.15s;border:none;background:none;color:var(--text2)}
+.nav-item.active{color:var(--accent2)}
+.nav-item svg{width:22px;height:22px;stroke-width:1.8}
+.nav-item span{font-size:10px;font-weight:500}
+
+/* Scroll content */
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px;padding-bottom:20px}
+.panel{display:none}
+.panel.active{display:block}
+
+/* Filter chips */
+.filter-scroll{display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none;flex-shrink:0}
+.filter-scroll::-webkit-scrollbar{display:none}
+.chip{padding:6px 14px;border-radius:20px;font-size:13px;white-space:nowrap;cursor:pointer;border:1px solid var(--border2);background:none;color:var(--text2);transition:all 0.15s;flex-shrink:0}
+.chip.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:500}
+.chip:active{transform:scale(0.95)}
+
+/* Day group */
+.day-group{margin-bottom:16px}
+.day-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.day-date{font-size:13px;font-weight:600;color:var(--text2)}
+.day-badge{font-size:11px;padding:2px 10px;border-radius:20px;font-weight:500}
+.loc-sapporo{background:rgba(124,106,255,0.2);color:#a594ff}
+.loc-otaru{background:rgba(54,212,176,0.2);color:#36d4b0}
+.loc-asahikawa{background:rgba(255,181,71,0.2);color:#ffb547}
+.loc-noboribetsu{background:rgba(255,107,107,0.2);color:#ff8a8a}
+.loc-toyako{background:rgba(78,205,196,0.2);color:#4ecdc4}
+.loc-hakodate{background:rgba(255,107,157,0.2);color:#ff9dc0}
+.loc-tokyo{background:rgba(100,200,255,0.2);color:#80d4ff}
+.loc-asakusa{background:rgba(100,200,255,0.2);color:#80d4ff}
+.loc-other{background:rgba(255,255,255,0.1);color:var(--text2)}
+
+/* Entry card */
+.entry-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px;margin-bottom:8px;transition:all 0.2s;
+  position:relative;overflow:hidden;
+}
+.entry-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.entry-card.color-sapporo::before{background:var(--accent)}
+.entry-card.color-otaru::before{background:var(--teal)}
+.entry-card.color-asahikawa::before{background:var(--amber)}
+.entry-card.color-noboribetsu::before{background:var(--red)}
+.entry-card.color-toyako::before{background:var(--green)}
+.entry-card.color-hakodate::before{background:var(--pink)}
+.entry-card.color-tokyo::before{background:#64c8ff}
+.entry-card.color-asakusa::before{background:#64c8ff}
+.entry-card.color-other::before{background:var(--text2)}
+.entry-card:active{transform:scale(0.99)}
+.entry-top{display:flex;align-items:flex-start;gap:10px}
+.entry-time{font-size:11px;color:var(--text2);min-width:72px;padding-top:2px;font-variant-numeric:tabular-nums;flex-shrink:0}
+.entry-activity{font-size:14px;font-weight:600;color:var(--text);flex:1;line-height:1.35}
+.entry-actions{display:flex;gap:4px;flex-shrink:0}
+.mini-btn{width:28px;height:28px;border:none;background:none;cursor:pointer;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px;transition:all 0.15s}
+.mini-btn:active{background:var(--card2)}
+.mini-btn.del:active{color:var(--red)}
+.entry-meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;margin-left:82px}
+.meta-tag{font-size:11px;padding:3px 9px;border-radius:20px;display:flex;align-items:center;gap:4px}
+.meta-tag.transport{background:rgba(255,255,255,0.07);color:var(--text2)}
+.meta-tag.cost{background:rgba(54,212,176,0.15);color:var(--teal)}
+.meta-tag.free{background:rgba(54,212,176,0.15);color:var(--teal)}
+.meta-tag.note{background:rgba(255,181,71,0.12);color:var(--amber)}
+
+/* Edit form */
+.edit-form{background:var(--card2);border:1px solid var(--accent);border-radius:var(--radius);padding:14px;margin-bottom:8px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.form-full{margin-bottom:8px}
+.form-label{font-size:11px;color:var(--text2);margin-bottom:4px;display:block}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;outline:none}
+.form-input:focus{border-color:var(--accent)}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.btn{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:none;color:var(--text2);transition:all 0.15s}
+.btn:active{transform:scale(0.97)}
+.btn-accent{background:var(--accent);border-color:var(--accent);color:white}
+.btn-accent:active{background:var(--accent2)}
+
+/* Add button */
+.add-fab{
+  position:fixed;right:18px;bottom:calc(var(--safe-bot) + 80px);
+  width:52px;height:52px;border-radius:16px;
+  background:var(--accent);border:none;color:white;font-size:26px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 4px 20px rgba(124,106,255,0.4);
+  transition:all 0.2s;z-index:40;
+}
+.add-fab:active{transform:scale(0.92)}
+
+/* Checklist */
+.check-grid{display:flex;flex-direction:column;gap:6px}
+.check-item{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.15s;
+}
+.check-item.done{background:rgba(54,212,176,0.08);border-color:rgba(54,212,176,0.25)}
+.check-item.done .check-label{text-decoration:line-through;color:var(--text2)}
+.check-box{width:22px;height:22px;border:2px solid var(--border2);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-size:13px}
+.check-item.done .check-box{background:var(--teal);border-color:var(--teal);color:#0a2a25}
+.check-label{font-size:14px;color:var(--text);flex:1}
+.check-del{font-size:16px;color:var(--text2);opacity:0;transition:opacity 0.15s;background:none;border:none;cursor:pointer;padding:4px}
+.check-item:hover .check-del{opacity:1}
+.add-item-row{display:flex;gap:8px;margin-top:12px}
+.add-item-row .form-input{flex:1}
+
+/* Section title */
+.section-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-title svg{width:18px;height:18px;color:var(--accent2)}
+
+/* Links */
+.link-section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.link-section h3{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.link-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.link-row:last-child{border-bottom:none;padding-bottom:0}
+.link-icon{width:32px;height:32px;border-radius:8px;background:rgba(124,106,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.link-text{flex:1;min-width:0}
+.link-name{font-size:13px;font-weight:500;color:var(--text)}
+.link-url{font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.link-arrow{color:var(--text2);font-size:18px;flex-shrink:0}
+.note-area{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px;color:var(--text);font-size:13px;line-height:1.6;resize:vertical;min-height:100px;outline:none}
+.note-area:focus{border-color:var(--accent)}
+
+/* Budget */
+.budget-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.budget-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.budget-row:last-child{border-bottom:none}
+.budget-loc{font-size:14px;color:var(--text)}
+.budget-amt{font-size:14px;font-weight:600;color:var(--teal)}
+.budget-total{background:linear-gradient(135deg,rgba(124,106,255,0.15),rgba(54,212,176,0.1));border:1px solid rgba(124,106,255,0.3);border-radius:var(--radius);padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.budget-total-label{font-size:13px;color:var(--text2)}
+.budget-total-val{font-size:24px;font-weight:700;color:var(--accent2)}
+.budget-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;margin-top:6px;overflow:hidden}
+.budget-bar-fill{height:100%;border-radius:3px;transition:width 0.6s}
+
+/* Empty state */
+.empty{text-align:center;padding:40px 20px;color:var(--text2)}
+.empty svg{width:48px;height:48px;margin-bottom:12px;opacity:0.3}
+.empty p{font-size:14px}
+
+/* Toast */
+.toast{position:fixed;bottom:calc(var(--safe-bot) + 90px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:10px 20px;font-size:13px;color:var(--text);opacity:0;transition:all 0.3s;z-index:100;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-title">🗾 日本旅行计划</div>
+    <div class="topbar-sub">北海道10天 · 东京5天 · 2026.11</div>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="exportCSV()" title="导出CSV">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat">
+    <div class="stat-val">15</div>
+    <div class="stat-label">总天数</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val accent" id="stat-items">50</div>
+    <div class="stat-label">行程项目</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="stat-cost">¥0</div>
+    <div class="stat-label">门票小计</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="stat-check">0%</div>
+    <div class="stat-label">行李</div>
+    <div class="progress-mini"><div class="progress-mini-fill" id="check-fill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- Panel: Itinerary -->
+<div id="panel-itinerary" class="panel active">
+  <div class="filter-scroll" id="filter-row"></div>
+  <div class="content" id="itinerary-list"></div>
+</div>
+
+<!-- Panel: Checklist -->
+<div id="panel-checklist" class="panel" style="display:none">
+  <div class="content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        行李清单
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn" onclick="checkAll()" style="padding:6px 12px;font-size:12px">全选</button>
+        <button class="btn" onclick="uncheckAll()" style="padding:6px 12px;font-size:12px">清空</button>
+      </div>
+    </div>
+    <div class="check-grid" id="check-grid"></div>
+    <div class="add-item-row">
+      <input class="form-input" id="new-item-input" placeholder="添加物品..." onkeydown="if(event.key==='Enter')addCheckItem()"/>
+      <button class="btn btn-accent" onclick="addCheckItem()">添加</button>
+    </div>
+  </div>
+</div>
+
+<!-- Panel: Links -->
+<div id="panel-links" class="panel" style="display:none">
+  <div class="content">
+    <div class="section-title" style="margin-bottom:12px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      参考链接
+    </div>
+    <div class="link-section">
+      <h3>🚄 JR Pass</h3>
+      <a href="https://www.xiaohongshu.com/discovery/item/699ab783000000000d00a661" target="_blank" class="link-row" style="text-decoration:none">
+        <div class="link-icon">📖</div>
+        <div class="link-text"><div class="link-name">北海道JR Pass 攻略</div><div class="link-url">小红书 · 购买 & 使用全攻略</div></div>
+        <div class="link-arrow">›</div>
+      </a>
+      <a href="http://xhslink.com/o/6ClTjfchFA5" target="_blank" class="link-row" style="text-decoration:none">
+        <div class="link-icon">🎫</div>
+        <div class="link-text"><div class="link-name">JR东日本在线预订</div><div class="link-url">周游券内容确认画面</div></div>
+        <div class="link-arrow">›</div>
+      </a>
+    </div>
+    <div class="link-section">
+      <h3>🏨 住宿</h3>
+      <a href="https://zh.airbnb.com/rooms/1590956368963992612" target="_blank" class="link-row" style="text-decoration:none">
+        <div class="link-icon">🏠</div>
+        <div class="link-text"><div class="link-name">Airbnb 札幌</div><div class="link-url">北海道主住处</div></div>
+        <div class="link-arrow">›</div>
+      </a>
+      <a href="https://www.trip.com/w/F1OqMTvMiU2" target="_blank" class="link-row" style="text-decoration:none">
+        <div class="link-icon">♨️</div>
+        <div class="link-text"><div class="link-name">第一泷本馆</div><div class="link-url">登别温泉旅馆</div></div>
+        <div class="link-arrow">›</div>
+      </a>
+      <a href="https://www.trip.com/w/TjoeYaKMiU2" target="_blank" class="link-row" style="text-decoration:none">
+        <div class="link-icon">🏯</div>
+        <div class="link-text"><div class="link-name">函館JR旅馆</div><div class="link-url">函馆住宿</div></div>
+        <div class="link-arrow">›</div>
+      </a>
+      <a href="https://www.trip.com/w/ELa4awAMiU2" target="_blank" class="link-row" style="text-decoration:none">
+        <div class="link-icon">🏢</div>
+        <div class="link-text"><div class="link-name">京王廣場大飯店</div><div class="link-url">札幌返程住宿</div></div>
+        <div class="link-arrow">›</div>
+      </a>
+      <a href="https://www.airbnb.cn/rooms/50777770?check_in=2026-11-30&check_out=2026-12-05" target="_blank" class="link-row" style="text-decoration:none">
+        <div class="link-icon">🗼</div>
+        <div class="link-text"><div class="link-name">Airbnb 东京</div><div class="link-url">11/30 - 12/5</div></div>
+        <div class="link-arrow">›</div>
+      </a>
+    </div>
+    <div class="link-section">
+      <h3>📝 备注</h3>
+      <textarea class="note-area" id="custom-note" placeholder="添加旅行备注...">务必提前预约吉卜力美术馆门票（每月10号开放下月预约）
+登别温泉建议穿浴衣在温泉街散步
+函馆山夜景看天气决定，可能需备选方案
+Shibuya Sky 提前在官网预约夜景门票</textarea>
+    </div>
+  </div>
+</div>
+
+<!-- Panel: Budget -->
+<div id="panel-budget" class="panel" style="display:none">
+  <div class="content">
+    <div class="section-title" style="margin-bottom:12px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      费用估算
+    </div>
+    <div class="budget-total">
+      <div><div class="budget-total-label">门票 & 车票合计</div><div style="font-size:11px;color:var(--text2);margin-top:2px">行程中标注费用</div></div>
+      <div class="budget-total-val" id="budget-total">¥0</div>
+    </div>
+    <div class="budget-card" id="budget-by-loc"></div>
+    <div class="budget-card">
+      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">其他费用参考</div>
+      <div class="budget-row"><span class="budget-loc">北海道JR Pass (7天)</span><span class="budget-amt">~¥30,000</span></div>
+      <div class="budget-row"><span class="budget-loc">东京交通 IC 卡</span><span class="budget-amt">~¥5,000</span></div>
+      <div class="budget-row"><span class="budget-loc">餐饮 (15天)</span><span class="budget-amt">~¥60,000</span></div>
+      <div class="budget-row"><span class="budget-loc">购物预算</span><span style="font-size:13px;color:var(--text2)">按需</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FAB add button (itinerary only) -->
+<button class="add-fab" id="add-fab" onclick="addEntry()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<!-- Bottom nav -->
+<nav class="bottomnav">
+  <button class="nav-item active" onclick="switchTab('itinerary')" id="nav-itinerary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span>行程</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('checklist')" id="nav-checklist">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    <span>行李</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('links')" id="nav-links">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+    <span>链接</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('budget')" id="nav-budget">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    <span>预算</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_ENTRIES = [
+  {id:1,date:"2026-11-21",loc:"札幌",time:"19:35-20:30",act:"抵达新千岁机场 (CTS)",transport:"ANA国内线",cost:"",note:"抵达日，不建议安排景点"},
+  {id:2,date:"2026-11-21",loc:"札幌",time:"20:30-21:30",act:"JR 前往札幌站",transport:"JR Rapid Airport",cost:"",note:"约37分钟"},
+  {id:3,date:"2026-11-21",loc:"札幌",time:"21:30-23:00",act:"Airbnb 入住 + 晚餐",transport:"地铁+步行",cost:"",note:"拉面或便利店补给"},
+  {id:4,date:"2026-11-22",loc:"札幌",time:"09:00-10:00",act:"大通公园",transport:"地铁+步行",cost:"免费",note:"附近轻松"},
+  {id:5,date:"2026-11-22",loc:"札幌",time:"10:00-11:00",act:"札幌电视塔",transport:"步行",cost:"1000",note:""},
+  {id:6,date:"2026-11-22",loc:"札幌",time:"11:00-13:00",act:"二条市场午餐",transport:"步行",cost:"",note:"推荐海鲜丼"},
+  {id:7,date:"2026-11-22",loc:"札幌",time:"14:00-17:00",act:"狸小路 + PARCO + Daimaru",transport:"步行",cost:"",note:"购物时间"},
+  {id:8,date:"2026-11-22",loc:"札幌",time:"18:00-21:00",act:"薄野夜景 + 成吉思汗烧肉",transport:"步行",cost:"",note:""},
+  {id:9,date:"2026-11-23",loc:"小樽",time:"09:00-10:00",act:"JR 前往小樽",transport:"JR",cost:"800",note:"建议早出发"},
+  {id:10,date:"2026-11-23",loc:"小樽",time:"10:00-13:00",act:"音乐盒堂 + LeTAO Pathos",transport:"步行",cost:"",note:"经典打卡区"},
+  {id:11,date:"2026-11-23",loc:"小樽",time:"13:00-14:00",act:"小樽午餐",transport:"步行",cost:"",note:"寿司推荐"},
+  {id:12,date:"2026-11-23",loc:"小樽",time:"14:00-16:00",act:"小樽堺町通商店街",transport:"步行",cost:"",note:"买伴手礼"},
+  {id:13,date:"2026-11-23",loc:"小樽",time:"16:00-17:00",act:"小樽运河",transport:"步行",cost:"",note:""},
+  {id:14,date:"2026-11-23",loc:"小樽",time:"17:00-20:00",act:"天狗山夜景",transport:"公交+缆车",cost:"2000",note:"天气差可取消"},
+  {id:15,date:"2026-11-23",loc:"札幌",time:"20:00-21:00",act:"返回札幌",transport:"JR",cost:"800",note:"晚上较冷"},
+  {id:16,date:"2026-11-24",loc:"旭川",time:"07:30-09:30",act:"JR特急前往旭川",transport:"JR特急",cost:"",note:"建议预留座位"},
+  {id:17,date:"2026-11-24",loc:"旭川",time:"10:00-15:00",act:"旭山动物园",transport:"巴士",cost:"1000",note:"企鹅散步季节"},
+  {id:18,date:"2026-11-24",loc:"旭川",time:"15:30-17:00",act:"旭川拉面村",transport:"巴士",cost:"",note:"推荐味噌拉面"},
+  {id:19,date:"2026-11-24",loc:"旭川",time:"17:30-20:00",act:"返回札幌",transport:"JR特急",cost:"",note:""},
+  {id:20,date:"2026-11-25",loc:"札幌",time:"全天自由",act:"北海道神宫/白色恋人/啤酒博物馆/藻岩山",transport:"地铁+电车",cost:"",note:"天气缓冲日"},
+  {id:21,date:"2026-11-26",loc:"登别",time:"10:00-12:00",act:"前往登别",transport:"JR特急",cost:"",note:"温泉旅馆体验"},
+  {id:22,date:"2026-11-26",loc:"登别",time:"13:00-16:00",act:"地狱谷 + 温泉街",transport:"巴士+步行",cost:"",note:"慢慢玩"},
+  {id:23,date:"2026-11-26",loc:"登别",time:"17:00-21:00",act:"温泉 + 怀石料理",transport:"酒店内",cost:"",note:"重点享受温泉"},
+  {id:24,date:"2026-11-27",loc:"洞爷湖",time:"10:00-12:00",act:"前往洞爷湖",transport:"JR+巴士",cost:"",note:"轻松移动日"},
+  {id:25,date:"2026-11-27",loc:"洞爷湖",time:"13:00-17:00",act:"湖边散步 + 温泉",transport:"步行",cost:"",note:"适合放空"},
+  {id:26,date:"2026-11-27",loc:"洞爷湖",time:"18:00-21:00",act:"温泉晚餐",transport:"酒店内",cost:"",note:"享受湖景"},
+  {id:27,date:"2026-11-28",loc:"函馆",time:"10:00-12:30",act:"前往函馆",transport:"JR特急",cost:"",note:"别太晚出发"},
+  {id:28,date:"2026-11-28",loc:"函馆",time:"13:30-16:00",act:"红砖仓库 + 金森仓库",transport:"市电",cost:"",note:"适合拍照"},
+  {id:29,date:"2026-11-28",loc:"函馆",time:"16:00-18:00",act:"元町 + 八幡坂",transport:"步行",cost:"",note:"坡道很多"},
+  {id:30,date:"2026-11-28",loc:"函馆",time:"18:00-21:00",act:"函馆山夜景",transport:"缆车",cost:"",note:"看天气决定"},
+  {id:31,date:"2026-11-29",loc:"函馆",time:"08:00-10:00",act:"函馆朝市早餐",transport:"步行",cost:"",note:"推荐海鲜"},
+  {id:32,date:"2026-11-29",loc:"函馆",time:"10:00-13:00",act:"五棱郭",transport:"市电",cost:"",note:"可上塔看景"},
+  {id:33,date:"2026-11-29",loc:"札幌",time:"14:00-18:00",act:"回札幌",transport:"JR特急",cost:"",note:"避免隔天赶飞机"},
+  {id:34,date:"2026-11-29",loc:"札幌",time:"晚上",act:"札幌附近逛",transport:"步行",cost:"",note:"轻松结束北海道"},
+  {id:35,date:"2026-11-30",loc:"东京",time:"09:00-12:30",act:"CTS → HND 飞东京",transport:"航班",cost:"",note:""},
+  {id:36,date:"2026-11-30",loc:"东京",time:"15:00-16:00",act:"羽田机场 → 两国民宿",transport:"京急线转大江户线",cost:"500",note:""},
+  {id:37,date:"2026-11-30",loc:"东京",time:"17:00-19:00",act:"秋叶原",transport:"JR中央总武线",cost:"",note:"Bic Camera、动漫手办"},
+  {id:38,date:"2026-11-30",loc:"东京",time:"19:00-21:00",act:"晚餐：相扑火锅",transport:"步行",cost:"",note:"两国特色美食"},
+  {id:39,date:"2026-12-01",loc:"浅草",time:"09:30-12:30",act:"浅草寺 & 雷门",transport:"打车/巴士",cost:"免费",note:"人形烧、抽签"},
+  {id:40,date:"2026-12-01",loc:"浅草",time:"12:30-14:00",act:"仲见世通 & 浅草神社",transport:"步行",cost:"",note:""},
+  {id:41,date:"2026-12-01",loc:"浅草",time:"14:00-17:00",act:"上野公园 & 阿美横町",transport:"大江户线",cost:"",note:"感受下町风情"},
+  {id:42,date:"2026-12-01",loc:"浅草",time:"18:00-21:00",act:"东京晴空塔",transport:"大江户线",cost:"2000",note:"看夜景逛Solamachi"},
+  {id:43,date:"2026-12-02",loc:"东京",time:"09:00-13:00",act:"三鹰之森吉卜力美术馆",transport:"JR中央线+巴士",cost:"1000",note:"★务必提前1个月10号抢票"},
+  {id:44,date:"2026-12-02",loc:"东京",time:"14:00-17:00",act:"井之头公园 & 新宿",transport:"JR中央线",cost:"",note:"看3D猫咪大屏"},
+  {id:45,date:"2026-12-02",loc:"东京",time:"18:00-21:00",act:"涩谷十字路口 & Shibuya Sky",transport:"JR山手线",cost:"2200",note:"提前预约门票"},
+  {id:46,date:"2026-12-03",loc:"东京",time:"09:00-12:00",act:"筑地场外市场",transport:"大江户线",cost:"",note:"海鲜早午餐、玉子烧"},
+  {id:47,date:"2026-12-03",loc:"东京",time:"13:00-17:00",act:"银座 或 麻布台之丘",transport:"地铁",cost:"",note:"银座购物"},
+  {id:48,date:"2026-12-03",loc:"东京",time:"18:00-21:00",act:"六本木",transport:"大江户线",cost:"",note:"远眺东京塔"},
+  {id:49,date:"2026-12-04",loc:"东京",time:"09:00-12:00",act:"明治神宫 & 原宿竹下通",transport:"JR/地铁",cost:"免费",note:"森林与潮流文化"},
+  {id:50,date:"2026-12-04",loc:"东京",time:"13:00-15:30",act:"表参道购物",transport:"步行",cost:"",note:"最后采购伴手礼"},
+];
+
+const DEFAULT_CHECKS = ["发热衣","衣服","裤子","底裤","安全裤","内衣","外套","Pad","毛巾","牙刷 牙膏","Charger","Sim card","Shampoo","转换头","脏衣服袋子","化妆品","口红","眼药水","绑头发","Passport","钱 卡","药(Panadol)/Fibre","iPad","Airpods","Boarding pass","鞋子","袜子（长袜或短袜）","香水","双眼皮贴","假睫毛","Powerbank","隐形眼镜/墨镜","眼镜布","Wet tissue","梳子","洗脸巾","洗脸水","洗衣液","Apple Watch & charger","首饰","润唇膏"];
+
+const LOC_COLOR = {
+  "札幌":"sapporo","小樽":"otaru","旭川":"asahikawa","登别":"noboribetsu",
+  "洞爷湖":"toyako","函馆":"hakodate","东京":"tokyo","浅草":"asakusa"
+};
+
+function save(key,val){ try{localStorage.setItem(key,JSON.stringify(val))}catch(e){} }
+function load(key,def){ try{const v=localStorage.getItem(key);return v?JSON.parse(v):def}catch(e){return def} }
+
+let entries = load('entries', DEFAULT_ENTRIES);
+let checkItems = load('checkItems', DEFAULT_CHECKS);
+let checkedSet = new Set(load('checked', []));
+let filterLoc = "全部";
+let editingId = null;
+let nextId = Math.max(...entries.map(e=>e.id), 0) + 1;
+
+function saveAll(){
+  save('entries', entries);
+  save('checkItems', checkItems);
+  save('checked', [...checkedSet]);
+}
+
+function locColor(loc){ return LOC_COLOR[loc] || 'other'; }
+
+function getAllLocs(){
+  return ["全部", ...new Set(entries.map(e=>e.loc))];
+}
+
+function formatDate(d){
+  const dt = new Date(d);
+  if(isNaN(dt)) return d;
+  const days=["日","一","二","三","四","五","六"];
+  return `${dt.getMonth()+1}月${dt.getDate()}日 周${days[dt.getDay()]}`;
+}
+
+function switchTab(tab){
+  ['itinerary','checklist','links','budget'].forEach(t=>{
+    document.getElementById('panel-'+t).style.display = t===tab?'':'none';
+    document.getElementById('panel-'+t).classList.toggle('active', t===tab);
+    document.getElementById('nav-'+t).classList.toggle('active', t===tab);
+  });
+  document.getElementById('add-fab').style.display = tab==='itinerary'?'':'none';
+}
+
+function renderFilters(){
+  const row = document.getElementById('filter-row');
+  const locs = getAllLocs();
+  row.innerHTML = locs.map(l=>`<button class="chip ${l===filterLoc?'active':''}" onclick="setFilter('${l}')">${l}</button>`).join('');
+}
+
+function setFilter(loc){ filterLoc=loc; renderFilters(); renderItinerary(); }
+
+function renderItinerary(){
+  const list = document.getElementById('itinerary-list');
+  const filtered = filterLoc==="全部" ? entries : entries.filter(e=>e.loc===filterLoc);
+  const groups = {};
+  filtered.forEach(e=>{
+    if(!groups[e.date]) groups[e.date]=[];
+    groups[e.date].push(e);
+  });
+  if(!filtered.length){
+    list.innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><p>暂无行程</p></div>`;
+    updateStats(); return;
+  }
+  let html='';
+  Object.keys(groups).sort().forEach(date=>{
+    const items=groups[date];
+    const locs=[...new Set(items.map(e=>e.loc))];
+    const badges=locs.map(l=>`<span class="day-badge loc-${locColor(l)}">${l}</span>`).join(' ');
+    html+=`<div class="day-group"><div class="day-header"><span class="day-date">${formatDate(date)}</span>${badges}</div>`;
+    items.forEach(e=>{
+      if(editingId===e.id){ html+=renderForm(e); return; }
+      const costTag = e.cost&&e.cost!=='免费'?`<span class="meta-tag cost">¥${e.cost}</span>`:e.cost==='免费'?`<span class="meta-tag free">免费</span>`:'';
+      const transTag = e.transport?`<span class="meta-tag transport">${e.transport}</span>`:'';
+      const noteTag = e.note?`<span class="meta-tag note">${e.note}</span>`:'';
+      html+=`<div class="entry-card color-${locColor(e.loc)}" onclick="startEdit(${e.id})">
+        <div class="entry-top">
+          <div class="entry-time">${e.time}</div>
+          <div class="entry-activity">${e.act}</div>
+          <div class="entry-actions">
+            <button class="mini-btn del" onclick="event.stopPropagation();delEntry(${e.id})" aria-label="删除">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="entry-meta">${transTag}${costTag}${noteTag}</div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  list.innerHTML=html;
+  updateStats();
+}
+
+function renderForm(e){
+  return `<div class="edit-form">
+    <div class="form-row">
+      <div><label class="form-label">日期</label><input class="form-input" id="ef-date" type="date" value="${e.date}"/></div>
+      <div><label class="form-label">地点</label><input class="form-input" id="ef-loc" type="text" value="${e.loc}"/></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">时间</label><input class="form-input" id="ef-time" type="text" value="${e.time}" placeholder="09:00-12:00"/></div>
+      <div><label class="form-label">费用(日元)</label><input class="form-input" id="ef-cost" type="text" value="${e.cost}" placeholder="1000或免费"/></div>
+    </div>
+    <div class="form-full"><label class="form-label">活动内容</label><input class="form-input" id="ef-act" type="text" value="${e.act}"/></div>
+    <div class="form-row">
+      <div><label class="form-label">交通</label><input class="form-input" id="ef-transport" type="text" value="${e.transport}"/></div>
+      <div><label class="form-label">备注</label><input class="form-input" id="ef-note" type="text" value="${e.note}"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn" onclick="cancelEdit()">取消</button>
+      <button class="btn btn-accent" onclick="saveEdit(${e.id})">保存</button>
+    </div>
+  </div>`;
+}
+
+function startEdit(id){ editingId=id; renderItinerary(); }
+function cancelEdit(){ editingId=null; renderItinerary(); }
+
+function saveEdit(id){
+  const idx=entries.findIndex(e=>e.id===id);
+  if(idx<0) return;
+  entries[idx]={...entries[idx],
+    date:document.getElementById('ef-date').value,
+    loc:document.getElementById('ef-loc').value,
+    time:document.getElementById('ef-time').value,
+    cost:document.getElementById('ef-cost').value,
+    act:document.getElementById('ef-act').value,
+    transport:document.getElementById('ef-transport').value,
+    note:document.getElementById('ef-note').value,
+  };
+  editingId=null; saveAll(); renderFilters(); renderItinerary(); showToast('已保存 ✓');
+}
+
+function delEntry(id){
+  if(!confirm('确定删除这条行程？')) return;
+  entries=entries.filter(e=>e.id!==id);
+  saveAll(); renderFilters(); renderItinerary();
+}
+
+function addEntry(){
+  const e={id:nextId++,date:"2026-11-21",loc:"札幌",time:"09:00-10:00",act:"新行程",transport:"步行",cost:"",note:""};
+  entries.unshift(e); editingId=e.id;
+  saveAll(); renderFilters(); renderItinerary();
+  document.getElementById('itinerary-list').scrollTop=0;
+}
+
+function updateStats(){
+  document.getElementById('stat-items').textContent=entries.length;
+  let total=0;
+  entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c))total+=c;});
+  document.getElementById('stat-cost').textContent=total?'¥'+total.toLocaleString():'¥0';
+  renderBudget(total);
+}
+
+function renderChecklist(){
+  const grid=document.getElementById('check-grid');
+  grid.innerHTML=checkItems.map((item,i)=>{
+    const done=checkedSet.has(i);
+    return `<div class="check-item ${done?'done':''}" onclick="toggleCheck(${i})">
+      <div class="check-box">${done?'✓':''}</div>
+      <span class="check-label">${item}</span>
+      <button class="check-del" onclick="event.stopPropagation();delCheckItem(${i})" aria-label="删除">✕</button>
+    </div>`;
+  }).join('');
+  const pct=checkItems.length?Math.round(checkedSet.size/checkItems.length*100):0;
+  document.getElementById('stat-check').textContent=pct+'%';
+  document.getElementById('check-fill').style.width=pct+'%';
+}
+
+function toggleCheck(i){
+  if(checkedSet.has(i)) checkedSet.delete(i); else checkedSet.add(i);
+  saveAll(); renderChecklist();
+}
+
+function checkAll(){ checkItems.forEach((_,i)=>checkedSet.add(i)); saveAll(); renderChecklist(); }
+function uncheckAll(){ checkedSet.clear(); saveAll(); renderChecklist(); }
+
+function addCheckItem(){
+  const inp=document.getElementById('new-item-input');
+  const val=inp.value.trim();
+  if(!val) return;
+  checkItems.push(val); inp.value='';
+  saveAll(); renderChecklist(); showToast('已添加 ✓');
+}
+
+function delCheckItem(i){
+  checkItems.splice(i,1);
+  checkedSet=new Set([...checkedSet].filter(x=>x<i).concat([...checkedSet].filter(x=>x>i).map(x=>x-1)));
+  saveAll(); renderChecklist();
+}
+
+function renderBudget(total){
+  if(total===undefined){
+    total=0; entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c))total+=c;});
+  }
+  document.getElementById('budget-total').textContent='¥'+total.toLocaleString();
+  const byCat={};
+  entries.forEach(e=>{const c=parseInt(e.cost);if(!isNaN(c)){if(!byCat[e.loc])byCat[e.loc]=0;byCat[e.loc]+=c;}});
+  const sorted=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  const max=sorted[0]?sorted[0][1]:1;
+  const colors=['#7c6aff','#36d4b0','#ffb547','#ff6b9d','#4ecdc4','#ff6b6b','#64c8ff','#a594ff'];
+  document.getElementById('budget-by-loc').innerHTML=`
+    <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">按地区门票/车票</div>
+    ${sorted.map(([loc,amt],i)=>`
+      <div class="budget-row">
+        <span class="budget-loc">${loc}</span>
+        <span class="budget-amt">¥${amt.toLocaleString()}</span>
+      </div>
+      <div class="budget-bar"><div class="budget-bar-fill" style="width:${Math.round(amt/max*100)}%;background:${colors[i%colors.length]}"></div></div>
+    `).join('')}
+    ${sorted.length===0?'<div style="color:var(--text2);font-size:13px;padding:8px 0">暂无费用数据</div>':''}
+  `;
+}
+
+function exportCSV(){
+  const rows=[["日期","地点","时间","活动","交通","费用","备注"]];
+  entries.forEach(e=>rows.push([e.date,e.loc,e.time,'"'+e.act+'"',e.transport,e.cost,'"'+e.note+'"']));
+  const csv='\ufeff'+rows.map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='japan_travel_plan.csv'; a.click();
+  showToast('已导出 CSV ✓');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// Save note on change
+document.getElementById('custom-note').addEventListener('input', function(){
+  save('customNote', this.value);
+});
+const savedNote=load('customNote',null);
+if(savedNote) document.getElementById('custom-note').value=savedNote;
+
+// Init
+renderFilters(); renderItinerary(); renderChecklist(); renderBudget();
+
+// Service Worker registration
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
